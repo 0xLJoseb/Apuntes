@@ -729,5 +729,5 @@ Now we run again the exploit.
 
 ***
 By: Josesito 
-.
+|
 This writeup was done with the help of S4vitar's video (https://www.youtube.com/watch?v=TytUFooC3kU&t).
