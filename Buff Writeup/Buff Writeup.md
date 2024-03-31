@@ -502,7 +502,7 @@ Thus the content of “badchars” will be stored in the “ESP” region.
 **Execute the exploit**
 
 By right-clicking on the ESP, we can click on "Follow in Dump"
-![bytearraydump](.https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/bytearraydump.png)
+![bytearraydump](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/bytearraydump.png)
 
 We can see here those characters that the software allows
 It is advisable most of the time to remove the [00] character. If by chance any character does not appear, it means that the program does not accept it. Thus, it will be necessary to remove this character and try again by sending the script, and check for any other character that may appear. In this case, all characters are accepted.
