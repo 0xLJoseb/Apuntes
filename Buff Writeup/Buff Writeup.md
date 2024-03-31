@@ -180,7 +180,7 @@ The user flag is located at:
 ```
 ```: XXXXXXXXXXXXXXXXXXXXXXX```
 
-# Buffer Overflow Exploitation and Privilege Escalation
+
 
 # Buffer Overflow Exploitation and Privilege Escalation
 ****
