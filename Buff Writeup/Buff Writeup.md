@@ -53,12 +53,12 @@ Let's go back to the message in the "Contacts" section that mentions:
 -_"Made with Gym Management Software 1.0."_
 **That is a nice hint!**
 
-Because we can look for possible vulnerabilities reported in this software.
+Because we can look for possible vulnerabilities reported about this software.
 Take a look at this code about Remote Code Execution without Authentication in the "Gym Management System 1.0" software.
 
 **https://www.exploit-db.com/exploits/48506**
 
-The script allows to perform an unauthorized file upload (a .php file). 
+The script allows to perform an unauthorized file upload a (.php file). 
 Once the php file is uploaded, using the "telepathy" parameter that acts on HTTP requests, remote command execution (RCE) is allowed.
 
 This works because the system doesn't perform a proper validation of the uploaded files. Instead of verifying the type and integrity of the uploaded files, it simply allows any file to be uploaded.
