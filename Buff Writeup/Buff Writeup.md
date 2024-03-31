@@ -560,6 +560,9 @@ Now, as we want the program flow to go to the 'ESP' because this is where we wan
 So, to verify this, by clicking on the address '0x68a98a7b', we will press [F2] to set a breakpoint.
 ![breakpoint](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/breakpoint.PNG)
 
+Once the breakpoint is set, we need to execute our exploit.
+Our exploit should look like this so far:
+
 ```python3
 #!/usr/bin/python3
 
@@ -603,11 +606,13 @@ if __name__ == '__main__':
     makeConnection()
 ```
 
+
 **Note that** ```EIP = b"\x7b\x8a\xa9\x68" # 0x68a98a7b```
 **It is written in reverse due to the little-endian format.**
 **With this code, we are going to validate if "EIP" indeed points to "ESP".**
 
 ![EIPESP](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/EIPESP.PNG)
+
 
 So, we have verified that indeed, EIP holds the address of ESP. Now, pay attention that by clicking on the icon (Step into) or pressing [F7], the program flow goes to the address of ESP. And what is stored in ESP? For now, those values associated with our variable "badchars".
 
