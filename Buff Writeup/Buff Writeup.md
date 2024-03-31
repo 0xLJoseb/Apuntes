@@ -139,7 +139,7 @@ Once the above script has been executed we should be able to have a command exec
 
 ![Kamehameha](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/kamehameha.PNG)
 
-Now it would be a good idea to get the "user flag" to get access to the system, one of the possible ways to do this is by getting a "reverse shell". 
+Now in order to get the "user flag" we need to get access to the system, one of the possible ways to do this is by getting a "reverse shell". 
 
 This can be accomplished in the following way:
 Since the target machine does not have netcat, we are going to provide an smb server whose folder will host a netcat executable.
