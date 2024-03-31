@@ -502,6 +502,8 @@ Thus the content of “badchars” will be stored in the “ESP” region.
 **Execute the exploit**
 
 By right-clicking on the ESP, we can click on "Follow in Dump"
+
+
 ![bytearraydump](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/bytearraydump.png)
 
 We can see here those characters that the software allows
