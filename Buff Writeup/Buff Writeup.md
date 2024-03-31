@@ -438,13 +438,19 @@ if __name__ == '__main__':
 ```
 We run the script and see that the EIP is pointing to the process **"0x4242424242".**
 This corresponds to "BBBB"
+
 ![42424242](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/42424242.png)
 
-and we can see that in the "ESP" section the "C" characters are being stored.
+And we can see that in the "ESP" section the "C" characters are being stored.
 By right-clicking on the ESP, we can click on "Follow in Dump"
+
 ![ESP1](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/ESP1.png)
-and we can see that right after the EIP "BBBB", the "C" characters are being stored in the ESP.
+
+
+And we can see that right after the EIP "BBBB", the "C" characters are being stored in the ESP.
+
 ![ESP2](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/ESP2.png)
+
 Then, we could control the flow of the program in the EIP.
 So instead of placing "C" we could load malicious instructions into the program.
 
