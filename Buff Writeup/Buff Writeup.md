@@ -548,9 +548,10 @@ Let's execute at the Immunity Debugger command line:
 Now, we can see that this address **'0x68a98a7b'** executes a 'jmp esp'.
 And there are **'Execute_Read'** privileges on this address, which are necessary in the sense that this will allow us to execute our commands.
 
-![icono](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/icono.PNG)
 
 We will go to section 'c' in the top bar, and there we will click on the icon:
+
+![icono](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/icono.PNG)
 
 Next, we will input the address '0x68a98a7b'.
 
