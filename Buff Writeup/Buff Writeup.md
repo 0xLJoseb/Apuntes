@@ -528,7 +528,7 @@ On our Windows machine, we will go to the Immunity Debugger
 
 ```Note: It is necessary to close and open the CloudMe service on the Windows machine [Target], open Immunity Debugger again and attach the CloudMe service.```
 
-Allí, ejecutaremos en la linea de comandos:
+There, we will execute in the command line:"
 ```bash
 !mona modules
 ```
