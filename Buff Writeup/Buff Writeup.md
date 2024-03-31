@@ -245,9 +245,9 @@ we have easy access to the [Linux IP] (Attacker) and the [Windows IP] (Target).
 
 Then to analyze the whole process, it is necessary to register with a free account and have downloaded on a Windows VM, the version of CloudMe (1.11.2).
 
-==https://www.cloudme.com/en/signup/==
+**https://www.cloudme.com/en/signup/**
 
-==https://cloudme.com/downloads/CloudMe_1112.exe==
+**https://cloudme.com/downloads/CloudMe_1112.exe**
 In addition, in our Windows system it is necessary that we have installed the following:
 - **Chisel** | (https://github.com/jpillora/chisel/releases/tag/v1.9.1)
 - **Immunity Debugger** | (https://www.immunityinc.com/products/debugger/)
@@ -276,7 +276,7 @@ To establish this, in our Windows machine (Target) we will execute in the direct
 ```
 ![chiselclient](pendiente)
 
-**==These commands indicate that traffic received on port 8888 on the Windows machine will be redirected through the tunnel created by Chisel to port 8888 on the Linux machine.==** 
+**These commands indicate that traffic received on port 8888 on the Windows machine will be redirected through the tunnel created by Chisel to port 8888 on the Linux machine.** 
 
 Now we will be working on the following python3 script
 ```python3
@@ -334,8 +334,8 @@ So the program is paused because "EIP" points the program flow to an address tha
 ![buffer](pendiente)
 In this image, "RET" refers to "EIP" in Immunity Debugger.
 
-So, as attackers, ==what is our target?.==
-==**Well, we need to know the exact number of characters we must send in the payload in order to overwrite the "EIP".**==
+So, as attackers, **what is our target?.**
+**Well, we need to know the exact number of characters we must send in the payload in order to overwrite the "EIP".**
 
 For this we will make use of the tool ```pattern_create.rb```:
 
@@ -454,7 +454,7 @@ However, for this, we cannot simply place the address of the ESP in our "EIP" pa
 ### Badchars
 ****
 First we must check which characters are interpreted by the program and which are not.
-==Because not all programs interpret all characters==
+**Because not all programs interpret all characters**
 
 ```Note: It is necessary to close and open the CloudMe service on the Windows machine [Target], open Immunity Debugger again and attach the CloudMe service.```
 
@@ -595,8 +595,8 @@ if __name__ == '__main__':
     makeConnection()
 ```
 
-==Note that== ```EIP = b"\x7b\x8a\xa9\x68" # 0x68a98a7b```
-==It is written in reverse due to the little-endian format.==
+**Note that** ```EIP = b"\x7b\x8a\xa9\x68" # 0x68a98a7b```
+**It is written in reverse due to the little-endian format.**
 **With this code, we are going to validate if "EIP" indeed points to "ESP".**
 
 ![EIPESP](pendiente)
