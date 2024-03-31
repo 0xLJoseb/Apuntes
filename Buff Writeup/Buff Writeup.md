@@ -371,7 +371,7 @@ So let's run the exploit again
 EIP = 316A4230
 [https://es.wikipedia.org/wiki/Endianness]
 
-La cadena "316A4230" al estar en 32-Bits se encuentra en Litel Endian. Debemos separarla en pares y darle la vuelta de derecha a izquierda:
+The string '316A4230' being in 32-Bits is in Little Endian. We should separate it into pairs and reverse it from right to left:
 -->  31 6A 42 30 = 30 42 6A 31
 
 Now the string "30 42 6A 31" is a hexadecimal string
