@@ -320,7 +320,7 @@ Let's attach the CloudMe process by clicking on file --> attach
 
 ![Immunityattach](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/Immunityattach.png)
 
-We can see at the bottom left that the process will be "paused", so we will click on the "Run Program" button or press <F9> for Run the Program
+We can see at the bottom left that the process will be "paused", so we will click on the "Run Program" button or press "F9" for Run the Program
 
 So let's run the exploit again and see what happens.
 
@@ -550,7 +550,7 @@ Next, we will input the address '0x68a98a7b'.
 
 Now, as we want the program flow to go to the 'ESP' because this is where we want to execute commands, it is of interest to us that 'EIP' points to the address '0x68a98a7b'.
 
-So, to verify this, by clicking on the address '0x68a98a7b', we will press <F2> to set a breakpoint.
+So, to verify this, by clicking on the address '0x68a98a7b', we will press [F2] to set a breakpoint.
 ![breakpoint](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/breakpoint.PNG)
 
 ```python3
@@ -602,7 +602,7 @@ if __name__ == '__main__':
 
 ![EIPESP](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/EIPESP.PNG)
 
-So, we have verified that indeed, EIP holds the address of ESP. Now, pay attention that by clicking on the icon (Step into) or pressing <F7>, the program flow goes to the address of ESP. And what is stored in ESP? For now, those values associated with our variable "badchars".
+So, we have verified that indeed, EIP holds the address of ESP. Now, pay attention that by clicking on the icon (Step into) or pressing [F7], the program flow goes to the address of ESP. And what is stored in ESP? For now, those values associated with our variable "badchars".
 
 ![caracteresESP](https://github.com/0xLJoseb/Apuntes/blob/main/Buff%20Writeup/Content%26/caracteresESP.PNG)
 
