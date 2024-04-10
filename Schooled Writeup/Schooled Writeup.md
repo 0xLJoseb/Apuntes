@@ -1,5 +1,5 @@
 # Schooled Writeup
-![Schooled]()
+![Schooled](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Schooledtarjeta.png)
 
 **Keyword summary:**
 - VHost Brute Force
