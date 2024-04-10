@@ -1,5 +1,5 @@
 # Schooled Writeup
-![Schooled](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/schooled.htb.PNG)
+![Schooled]()
 
 **Keyword summary:**
 - VHost Brute Force
@@ -61,7 +61,7 @@ Añadiremos en el archivo "/etc/hosts" el dominio que encontramos anteriormente.
 **¿Que es Virtual Hosting?** [https://httpd.apache.org/docs/2.4/vhosts/].
 
 
-![schooled.htb]()
+![schooled.htb](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/schooled.htb.PNG)
 
 Ingresemos al sitio nuevamente haciendo uso de este dominio
 
