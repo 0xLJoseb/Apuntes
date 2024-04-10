@@ -165,7 +165,7 @@ Sin embargo, esta cookie se encuentra codificada en base64, asi que tenemos que 
 
 
 ![stealingcookie](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/stealingcookie.PNG)
-base6
+
 
 ```bash
 MoodleSession=lan2a2hc9ub9qhkhdful6mnff2
