@@ -95,7 +95,10 @@ Efectivamente, el sitio web cuenta con un subdominio en el que podemos ver un Mo
 Así que creemos una cuenta nueva y entremos al moodle
 
 Algo curioso es que al intentar registrarme en el Moodle, al colocar un correo electronico es requisito que este pertenezca al dominio **"student.schooled.htb"**
+
+
 ![emailleakinfo](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/emailleakinfo.PNG)
+
 
 (Al incorporar este subdominio en el archivo /etc/hosts nos lleva a la misma pagina inicial)
 
