@@ -53,7 +53,7 @@ De esta forma podemos ver que el sitio web en primer lugar es un FreeBSD y adem�
 
 Asi que procederemos a entrar al sitio web
 
-![web]()
+![web](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/web.PNG)
 
 Por ahora no vemos nada interesante, así, que en caso de que se este aplicando **Virtual Hosting** sobre el sitio web
 Añadiremos en el archivo "/etc/hosts" el dominio que encontramos anteriormente. Ya que en algunos casos, acceder al sitio web mediante la dirección IP y acceder mediante un dominio no es lo mismo
