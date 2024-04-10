@@ -400,10 +400,6 @@ mysql -umoodle -pPlaybookMaster2020 -e 'show databases'
 ```
 Aqui debe usarse la flag -e para ejecutar comandos sin entrar a un "mysql" interactivo, partiendo desde que no se cuenta con una consola interactiva en la reverse shell lo cual nos dara problemas para ejecutar comandos interactivos :/
 
-```bash
-mysql -umoodle -pPlaybookMaster2020 -e 'show databases'
-```
-
 ![showdatabases]()
 
 ```bash
