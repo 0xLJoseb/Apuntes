@@ -19,13 +19,13 @@ nmap -sS --min-rate 2500 -vvv -n --open -Pn [IP]
 ```
 Replace '[IP]' with the IP address to be scanned
 
+![Puertos](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Ports.PNG)
+
 We will see that the open ports are:
 
 - 22/tcp | ssh
 - 80/tcp | http
 - 33060/tcp | mysqlx
-
-![Puertos](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Ports.PNG)
 
 now we can do para obtener un poco mas de información sobre los puertos abiertos de la IP Objetivo:
 ```bash
