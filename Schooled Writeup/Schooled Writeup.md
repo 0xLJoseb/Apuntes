@@ -40,7 +40,7 @@ We will perform two enumeration processes on this page before entering it.
 
 - With the tool "whatweb" we can obtain more information about this page.
 - With the "http-enum" script provided by the nmap tool
-- 
+
 ```bash
 whatweb [IP]
 ```
