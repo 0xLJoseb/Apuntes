@@ -249,7 +249,7 @@ https://www.vaadata.com/blog/what-is-mass-assignment-attacks-and-security-tips/
 ## Teacher Self-Assignment to Manager Role
 ****
 
-Starting from the fact that we are authenticated as the Manuel Phillips Teacher, we are going to navigate to the list of participants in the mathematics course that this user directs. We can see that we have a small button named "Enrol Users" in which it seems we have the ability to enroll students to the course forcibly.
+Starting from the fact that we are authenticated as the Manuel Phillips Teacher, we are going to navigate to the list of participants in the mathematics course that this user directs.
 
 **At this point I would like to remind you that we had the information on which teachers were assigned to the educational institution.**
 
@@ -257,6 +257,9 @@ Starting from the fact that we are authenticated as the Manuel Phillips Teacher,
 
 As attackers we would be interested in accessing the account of "Lianne Carter" teacher, since she has a manager role.
 So let's try to add the user "Lianne Carter" to the mathematics course.
+
+So. We can see that we have a small button named "Enrol Users" in which it seems we have the ability to enroll students to the course forcibly.
+
 
 ![Agregaralcurso](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Agregaralcurso.PNG)
 
