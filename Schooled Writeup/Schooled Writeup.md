@@ -466,7 +466,7 @@ De esta forma estamos diciendo que nuestro hash esta compuesto primeramente por 
 ![hashrecognize1](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hashrecognize1.PNG)
 
 y vemos que hay por lo menos 4 tipos de formatos que se adecuan a nuestro hash, sin embargo, vemos que aquellos de forma ($2a$05$) serian los mas probables, asi que vamos a filtrar con grep para ese patrón:
-**(Es necesario colocar antes de los signos "$" un "\" para que sea posible reconocerlos)**
+**(Es necesario colocar antes de los signos "$" un "\\" para que sea posible reconocerlos)**
 ```bash
 hashcat --example-hashes | grep '\$2a\$05\$' -B 11
 ```
