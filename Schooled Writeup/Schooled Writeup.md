@@ -403,9 +403,9 @@ So with netcat we are going to establish a listening port, in my case I will do 
 
 We have to URL-Encode the "&" because the system might not interpret the command.
 
-Enumerating the system a bit in the path /usr/local/www/apache24/data/moodle
+Enumerating the system a bit in the path **/usr/local/www/apache24/data/moodle**
 
-We will find a file "config.php" Containing database login credentials
+We will find a file **"config.php"** containing database login credentials
 
 ![config](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/config.PNG)
 
