@@ -410,19 +410,19 @@ mysql -umoodle -pPlaybookMaster2020 -e 'show databases'
 ```
 Aqui debe usarse la flag -e para ejecutar comandos sin entrar a un "mysql" interactivo, partiendo desde que no se cuenta con una consola interactiva en la reverse shell lo cual nos dara problemas para ejecutar comandos interactivos :/
 
-![showdatabases]()
+![showdatabases](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/showdatabases.PNG)
 
 ```bash
 mysql -umoodle -pPlaybookMaster2020 -e 'show tables' moodle
 ```
 
-![showtables]()
+![showtables](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/showtables.PNG)
 
 ```bash
 mysql -umoodle -pPlaybookMaster2020 -e 'describe mdl_user' moodle
 ```
 
-![columns]()
+![columns](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/columns.PNG)
 
 Aqui las columnas de interes serian username | password | email
 
@@ -431,8 +431,8 @@ Aqui las columnas de interes serian username | password | email
 mysql -umoodle -pPlaybookMaster2020 -e 'select username,password,email from mdl_user' moodle
 ```
 
-![credenciales]()
-![home]()
+![credenciales](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/credenciales.PNG)
+![home](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/home.PNG)
 De todas estas nos interesan aquellas de "jamie" y "steve" ya que son los usuarios que cuentan con un directorio en /home/
 
 Además de que Jamie es Admin y pues steve no esta en el sistema. Así que vamos a copiarnos a nuestro sistema el Hash correspondiente a Jamie (Admin)
@@ -447,7 +447,7 @@ Esto lo podemos hacer asi:
 Esto lo podemos hacer mediante el uso de expresiones regulares
 Tenemos nuestro Hash a romper:
 
-![hashformat]()
+![hashformat](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hashformat.PNG)
 
 Así:
 ```bash
@@ -456,14 +456,14 @@ hashcat --example-hashes | grep -oP '\$2\w\$\d{2}\$'
 De esta forma estamos diciendo que nuestro hash esta compuesto primeramente por los simbolos "$2" seguido de un caracter (y) representado como "w" y luego sigue otro signo "$", seguido de dos digitos y un "$" más
 **[Puede sonar confuso, pero simplemente estamos ingresando el patrón que se observa en el hash con el que contamos]**
 
-![hashrecognize1]()
+![hashrecognize1](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hashrecognize1.PNG)
 
 y vemos que hay por lo menos 4 tipos de formatos que se adecuan a nuestro hash, sin embargo, vemos que aquellos de forma ($2a$05$) serian los mas probables, asi que vamos a filtrar con grep para ese patrón:
 **(Es necesario colocar antes de los signos "$" un "\" para que sea posible reconocerlos)**
 ```bash
 hashcat --example-hashes | grep '\$2a\$05\$' -B 11
 ```
-
+![hashrecognize2](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hashrecognize2.PNG)
 Y podemos ver que el formato mas probable del hash es **"bcrypt"**
 
 Así que entonces utilizemos **hashcat** para crackear el Hash.
@@ -483,7 +483,7 @@ Si ya se ha crackeado un hash con hashcat y queremos ver su resultado en texto p
 ```bash
 hashcat -m 3200 --show hash --user
 ```
-![hash]()
+![hash](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hash.PNG)
 
 
 De esta forma la contraseña del usuario Jamie es: **!QAZ2wsx**
@@ -493,7 +493,7 @@ Entonces, podemos intentar entrar al sistema por **ssh** utilizando el Usuario d
 ```bash
 ssh jamie@[IP]
 ```
-![userflag]()
+![userflag](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/userflag.PNG)
 
 **Perfecto!**
 
@@ -506,11 +506,11 @@ sudo -l
 ```
 
 Nos es posible ver que tenemos algunos privilegios a nivel de **sudoers**
-![sudoers]()
+![sudoers](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/sudoers.PNG)
 
 Así que vamos a recurrir a un recurso util para situaciones en las que contamos con binarios que podemos ejecutar [https://gtfobins.github.io/]
 
-![pkgtfobins]()
+![pkgtfobins](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pkgtfobins.PNG)
 
 **¿Cual es el objetivo?**
 Podemos ver que la explotación de este binario para escalar privilegios utiliza **fpm**, la maquina objetivo no cuenta con este recurso, así que nosotros se lo proporcionaremos
@@ -518,7 +518,7 @@ Además el campo 'id' es aquel en el que vamos a poder ejecutar comandos, sin em
 ```bash
 ls -l /bin/bash
 ```
-![SUID]()
+![SUID](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/SUID.PNG)
 
 Podemos ver que el binario "/usr/local/bin/bash" tiene permisos "755".
 
@@ -533,7 +533,7 @@ paru -S fpm
 ```
 Entonces, una vez con fpm en la maquina. Podemos actuar de la siguiente forma, vamos a querer que nuestro comando luzca de esta forma:
 
-![comandoSUID]()
+![comandoSUID](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/comandoSUID.PNG)
 
 y luego procedemos a ejecutar:
 
@@ -558,16 +558,16 @@ Una vez con el ".txz" en la maquina victima, segun **gtfobins** tendriamos que e
 sudo pkg install -y --no-repo-update ./x-1.0.txz
 ```
 
-![SUIDaccomp]()
+![SUIDaccomp](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/SUIDaccomp.PNG)
 
 "/usr/local/bin/bash" ahora cuenta con permisos **SUID**
 
-![bashp]()
+![bashp](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/bashp.PNG)
 
 
 A través del comando **bash -p** se inicia una nueva instancia de la shell Bash. La nueva instancia de Bash heredará los privilegios del propietario del archivo, que en este caso sería **root**
 
-![pwned.]()
+![pwned.](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pwned.PNG)
 
 
 
