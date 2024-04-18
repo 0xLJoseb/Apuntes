@@ -520,8 +520,12 @@ Así que vamos a recurrir a un recurso util para situaciones en las que contamos
 ![pkgtfobins](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pkgtfobins.PNG)
 
 **¿Cual es el objetivo?**
-Podemos ver que la explotación de este binario para escalar privilegios utiliza **fpm**, la maquina objetivo no cuenta con este recurso, así que nosotros se lo proporcionaremos
-Además el campo 'id' es aquel en el que vamos a poder ejecutar comandos, sin embargo nosotros no queremos ejecutar el comando 'id', sino, mas bien queremos ejecutar algo como '/bin/bash'. Podemos ver la ruta de este binario mediante:
+Podemos ver que la explotación de este binario para escalar privilegios utiliza **fpm**, la maquina objetivo no cuenta con este recurso, así que nosotros se lo proporcionaremos.
+
+Además el campo 'id' es aquel en el que vamos a poder ejecutar comandos, sin embargo nosotros no queremos ejecutar el comando 'id', sino, mas bien queremos ejecutar algo como '/bin/bash'. 
+
+Podemos ver la ruta de este binario mediante:
+
 ```bash
 ls -l /bin/bash
 ```
@@ -530,6 +534,7 @@ ls -l /bin/bash
 Podemos ver que el binario "/usr/local/bin/bash" tiene permisos "755".
 
 Nuestro **objetivo** seria que el binario que se encuentra en la ruta: "/usr/local/bin/bash" cuente con permisos **SUID** (4755)
+
 **¿Que es el permiso SUID?** [https://www.scaler.com/topics/special-permissions-in-linux/]
 
 **Entonces...**
