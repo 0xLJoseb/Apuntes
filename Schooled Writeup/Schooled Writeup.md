@@ -418,6 +418,8 @@ For this, a solution that we can apply is in our system:
 ```bash
 echo $PATH
 ```
+**Make sure to include the "$" sign before "PATH" so that the value of "PATH" is displayed on the screen**
+
 ![MIPATH](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/MIPATH.PNG)
 
 
