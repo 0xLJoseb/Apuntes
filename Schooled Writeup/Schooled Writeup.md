@@ -468,7 +468,7 @@ Of all these, we're interested in those of 'jamie' and 'steve' since they are th
 
 If we crack the hash and consider the possibility of Jamie's password being reused, we could gain SSH access to the system. We can crack the hash using tools like hashcat, identifying the encryption format of the password. We can do this as follows:
 
-### Pequeña anotación [¿Como reconocer probables formatos de Hashes?]
+### Short note: [How to recognize likely hash formats?]
 
 
 We can achieve this using regular expressions. 
@@ -492,6 +492,7 @@ And we see that there are at least 4 types of formats that fit our hash. However
 hashcat --example-hashes | grep '\$2a\$05\$' -B 11
 ```
 ![hashrecognize2](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hashrecognize2.PNG)
+
 And we can see that the most likely format of the hash is **"bcrypt"**
 
 So, let's use **hashcat** to crack the hash
@@ -594,12 +595,13 @@ sudo pkg install -y --no-repo-update ./x-1.0.txz
 
 ![SUIDaccomp](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/SUIDaccomp.PNG)
 
-"/usr/local/bin/bash" now has SUID permissions.
+**"/usr/local/bin/bash" now has SUID permissions.**
 
 ![bashp](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/bashp.PNG)
 
+The command bash -p starts a new instance of the Bash shell. 
+The new Bash instance will inherit the privileges of the file owner, which in this case would be root.
 
-The command bash -p starts a new instance of the Bash shell. The new Bash instance will inherit the privileges of the file owner, which in this case would be root.
 ![pwned.](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pwned.PNG)
 
 
