@@ -409,11 +409,17 @@ We will find a **"config.php"** file containing database login credentials
 
 ![config](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/config.PNG)
 
-It turns out that the value of $PATH of the user that provides us the shell in the system **www** is very short and does not cover all the ways in which there can be commands that can be used, for this, a solution that we can apply is in our system:
+It turns out that the value of $PATH of the user that provides us the shell in the system **www** is very short and does not cover all the ways in which there can be commands that can be used.
+
+![PATH](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/PATH.PNG)
+
+For this, a solution that we can apply is in our system:
 
 ```bash
 echo $PATH
 ```
+![MIPATH](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/MIPATH.PNG)
+
 
 We copy the value of our $PATH, (it doesn't matter that there are paths that may not exist on the target machine, this will serve us so that the user **www** of the shell can execute more commands). And in the target machine we write the command:
 
