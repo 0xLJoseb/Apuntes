@@ -386,8 +386,8 @@ We have to URL-Encode the "&" because the system might not interpret the command
 
 Enumerating the system a bit in the path /usr/local/www/apache24/data/moodle
 
-We will find a file "config.php"
-Containing database login credentials
+We will find a file "config.php" Containing database login credentials
+
 ![config](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/config.PNG)
 
 Resulta que el valor de $PATH del usuario que nos provee la shell en el sistema ("www") es muy corto y no abarca todas las vias en las que pueden haber comandos que se puedan utilizar, por esto, una solución que podemos aplicar es en nuestro sistema:
