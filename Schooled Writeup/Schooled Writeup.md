@@ -349,7 +349,8 @@ Now, logged in as this user, we will have access to a "Site administration" pane
 
 # Mass Assignment Attack 
 ****
-In the "Users" section we can see a section "Permissions".
+
+In the "Users" section, there is a subsection labeled "Permissions".
 
 ![permissions](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/permissions.PNG)
 
