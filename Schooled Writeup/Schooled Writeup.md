@@ -352,9 +352,10 @@ Lo que vemos en Burpsuite son aquellos permisos y su valor con los que actualmen
 
 Existe un repositorio de GitHub acerca del (CVE-2020-14321) [https://github.com/HoangKien1020/CVE-2020-14321]
 
-Aqui, en la sección "Payload to full permissions" parece explotarse un Mass Assignment Attack to have the full permissions in the system. Veremos que el estilo del Payload es muy similar a lo que tenemos en Burpsuite, asi que vamos a reemplazarlo
+Aqui, en la sección "Payload to full permissions" parece explotarse un Mass Assignment Attack to have the full permissions in the system. Veremos que el estilo del Payload es muy similar a lo que tenemos en Burpsuite, **asi que vamos a reemplazarlo**
 
-Ahora, verificaremos que tengamos los privilegios para subir Plugins al sistema
+Ahora, verificaremos que tengamos los privilegios para subir Plugins al sistema:
+
 
 ![pluginson](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pluginson.PNG)
 
