@@ -234,7 +234,7 @@ en la que podemos escalar privilegios a "manager role" partiendo desde un usuari
 **¿Que es Mass Assignment Attack?**
 https://www.vaadata.com/blog/what-is-mass-assignment-attacks-and-security-tips/
 
-### Teacher Self-Assignment to Manager Role
+## Teacher Self-Assignment to Manager Role
 ****
 
 Partiendo del hecho de que nos encontramos autenticados as the Manuel Phillips Teacher Nos vamos a dirigir a la lista de participantes del curso de matematicas que este usuario dirige. Podemos ver que contamos con un pequeño boton nombrado como "Enrol Users" en el que al parecer tenemos la capacidad de inscribir a estudiantes al curso de manera forzada.
