@@ -28,7 +28,7 @@ We will see that the open ports are:
 - 80/tcp | http
 - 33060/tcp | mysqlx
 
-now we can do para obtener un poco mas de información sobre los puertos abiertos de la IP Objetivo:
+Now we can run the following command to get some more information about the open ports of the Target IP:
 ```bash
 nmap -sCV -p22,80,33060 [IP]
 ```
