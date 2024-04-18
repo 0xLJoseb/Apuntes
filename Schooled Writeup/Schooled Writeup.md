@@ -132,7 +132,8 @@ We see that in our Moodle profile it shows:
 
 ![showingtest](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/showingtest.PNG)
 
-In this way, what we can try as attackers is to verify if the "MoodleNet profile" field is vulnerable to XSS (Cross-Site Scripting).
+In this way, what we can try as attackers is to **verify if the "MoodleNet profile" field is vulnerable to XSS (Cross-Site Scripting).**
+
 **What is Cross-Site Scripting (XSS)?** [https://www.welivesecurity.com/la-es/2021/09/28/que-es-ataque-xss-cross-site-scripting/]
 
 So, what we will do is inject a test payload into the "MoodleNet profile" field, like the following:
