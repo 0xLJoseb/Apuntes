@@ -240,9 +240,10 @@ Thus, in the page [https://moodle.org/security/] we can check the date of Moodle
 ![moodlevuln](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/moodlevuln.PNG)
 
 We can see that there is a vulnerability on this version of Moodle identified as: **CVE-2020-14321**
-"Course enrolments allowed privilege escalation from teacher role to manager role, enabling Remote Code Execution (RCE) through a 'Mass Assignment Attack' vulnerability."
 
-**¿Que es Mass Assignment Attack?**
+>"Course enrolments allowed privilege escalation from teacher role to manager role, enabling Remote Code Execution (RCE) through a 'Mass Assignment Attack' vulnerability."
+
+**What is a Mass Assignment Attack?**
 https://www.vaadata.com/blog/what-is-mass-assignment-attacks-and-security-tips/
 
 ## Teacher Self-Assignment to Manager Role
