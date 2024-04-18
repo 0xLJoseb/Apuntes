@@ -301,7 +301,7 @@ If we change this value in our search engine, by the number "25".
 
 We are redirected to the Moodle profile of the user "Liann Carter".
 
-(I think this would correspond to a mild **Web Parameter Manipulation** vulnerability. [https://owasp.org/www-community/attacks/Web_Parameter_Tampering])
+(I think this would correspond to a mild **Web Parameter Tampering** vulnerability. [https://owasp.org/www-community/attacks/Web_Parameter_Tampering])
 
 **Back to the point**
 
