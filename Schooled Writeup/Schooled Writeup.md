@@ -582,4 +582,13 @@ A través del comando **bash -p** se inicia una nueva instancia de la shell Bash
 ![pwned.](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/pwned.PNG)
 
 
+**Pwned.**
+
+***
+
+
+***
+By: Josesito 
+|
+This writeup was done with the help of S4vitar's video (https://www.youtube.com/watch?v=HNHvMgQwHQM&t).
 
