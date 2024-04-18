@@ -434,10 +434,15 @@ mysql -umoodle -pPlaybookMaster2020 -e 'select username,password,email from mdl_
 ```
 
 ![credenciales](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/credenciales.PNG)
-![home](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/home.PNG)
-De todas estas nos interesan aquellas de "jamie" y "steve" ya que son los usuarios que cuentan con un directorio en /home/
 
-Además de que Jamie es Admin y pues steve no esta en el sistema. Así que vamos a copiarnos a nuestro sistema el Hash correspondiente a Jamie (Admin)
+Al contar con un listado de credenciales, podemos revisar si en la maquina se cuenta con apartados en el directorio /home
+
+![home](https://github.com/0xLJoseb/Apuntes/blob/main/Schooled%20Writeup/Content/home.PNG)
+
+
+De todas estas nos interesan aquellas de "jamie" y "steve" ya que son los usuarios que cuentan con un directorio en /home
+
+Además de que Jamie es Admin y pues steve no esta en el listado de la base de datos. Así que vamos a copiarnos a nuestro sistema el Hash correspondiente a Jamie (Admin)
 
 Si rompemos el hash y pensamos en que podria estarse reutilizando la clave del usuario Jamie, podriamos ingresar por ssh al sistema
 Podemos romper el hash utilizando herrramientas como hashcat y reconociendo el formato con el que esta encriptada la contraseña
