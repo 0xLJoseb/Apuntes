@@ -703,6 +703,7 @@ We'll need now to upload the Chisel file to the victim machine so that we can pe
 
 We can download the Windows executable for Chisel from the website
 (https://github.com/jpillora/chisel/releases/tag/v1.9.1)
+
 ```Note: We can verify if we are downloading a 32-bit or 64-bit file by running the command on the target machine [Windows]:"```
 ```
 systeminfo
