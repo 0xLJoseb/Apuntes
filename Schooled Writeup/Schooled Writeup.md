@@ -468,7 +468,7 @@ Of all these, we're interested in those of 'jamie' and 'steve' since they are th
 
 If we crack the hash and consider the possibility of Jamie's password being reused, we could gain SSH access to the system. We can crack the hash using tools like hashcat, identifying the encryption format of the password. We can do this as follows:
 
-### Short note: [How to recognize likely hash formats?]
+### Short note: [How to recognize possible hash formats?]
 
 
 We can achieve this using regular expressions. 
